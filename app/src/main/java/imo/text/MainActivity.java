@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < 100; i++){
             int randomInt = random.nextInt(10);
             for(int j = 0; j < randomInt; j++){
-                sb.append("□");
+                sb.append("a");
             }
             sb.append("\n");
         }
@@ -58,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         Paint mPaint;
         Rect textBounds;
 
-        float lineSpacing;
-        final float LINE_HEIGHT;
+        float lineSpacing = -1;
+        float LINE_HEIGHT = -1;
 
         public Editor(Context context, String text) {
             super(context);
@@ -71,11 +70,6 @@ public class MainActivity extends AppCompatActivity {
             mPaint.setColor(Color.WHITE);
 
             lines = Arrays.asList(text.split("\n"));
-
-            String dummy = lines.get(0);
-            mPaint.getTextBounds(dummy, 0, dummy.length(), textBounds);
-            LINE_HEIGHT = textBounds.height();
-            lineSpacing = LINE_HEIGHT / 2f;
         }
 
         @Override
@@ -85,16 +79,22 @@ public class MainActivity extends AppCompatActivity {
             float lastBottom = 0;
             for(String line : lines){
                 mPaint.getTextBounds(line, 0, line.length(), textBounds);
+                if(LINE_HEIGHT == -1){ //populate only once
+                    LINE_HEIGHT = textBounds.height();
+                    lineSpacing = LINE_HEIGHT / 2f;
+                }
 
                 rect.left = 0;
                 rect.top = (int) (lastBottom + lineSpacing);
                 rect.right = textBounds.width();
                 rect.bottom = rect.top + textBounds.height();
 
-                if(rect.top >= getHeight()) break;
+                if(rect.top >= getHeight()) break;//only draw visible lines
 
+                mPaint.setColor(Color.DKGRAY);
                 canvas.drawRect(rect, mPaint);
-                canvas.drawText(line, rect.right, rect.top + -textBounds.top, mPaint);
+                mPaint.setColor(Color.WHITE);
+                canvas.drawText(line, rect.left, rect.bottom, mPaint);
 
                 lastBottom = rect.bottom;
             }
