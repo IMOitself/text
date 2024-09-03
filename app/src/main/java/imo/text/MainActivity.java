@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Rect textBounds;
 
         float lineSpacing = -1;
-        float LINE_HEIGHT = -1;
+        float lineHeight = -1;
 
         public Editor(Context context, String text) {
             super(context);
@@ -79,15 +79,15 @@ public class MainActivity extends AppCompatActivity {
             float lastBottom = 0;
             for(String line : lines){
                 mPaint.getTextBounds(line, 0, line.length(), textBounds);
-                if(LINE_HEIGHT == -1){ //populate only once
-                    LINE_HEIGHT = textBounds.height();
-                    lineSpacing = LINE_HEIGHT / 2f;
+                if(lineHeight == -1){ //populate only once
+                    lineHeight = textBounds.height();
+                    lineSpacing = lineHeight / 2f;
                 }
 
                 rect.left = 0;
                 rect.top = (int) (lastBottom + lineSpacing);
                 rect.right = textBounds.width();
-                rect.bottom = rect.top + textBounds.height();
+                rect.bottom = rect.top + lineHeight;
 
                 if(rect.top >= getHeight()) break;//only draw visible lines
 
