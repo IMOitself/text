@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "IMO Text"
+rootProject.name = "text"
 include ':app'

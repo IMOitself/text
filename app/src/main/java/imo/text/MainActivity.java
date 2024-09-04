@@ -1,5 +1,6 @@
 package imo.text;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,63 +9,44 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+import android.widget.LinearLayout;
+import android.view.MotionEvent;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init();
-    }
-
-    void init(){
-        LinearLayout layout = new LinearLayout(this);
-        layout.addView(new Editor(this, generateText()));
-        setContentView(layout);
-    }
-
-    String generateText(){
+        LinearLayout root = new LinearLayout(this);
         StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for(int i = 0; i < 100; i++){
-            int randomInt = random.nextInt(10);
-            for(int j = 0; j < randomInt; j++){
-                sb.append("a");
-            }
-            sb.append("\n");
+        sb.append("america ya!");
+        for (int i = 0; i < 99; i++) {
+            sb.append("\nhallo:D");
         }
-        return sb.toString();
+        root.addView(new Editor(this, sb.toString()));
+        setContentView(root);
     }
-
-
-
-
-
-
 
     static class Editor extends View {
         List<String> lines;
 
-        RectF rect;
         Paint mPaint;
         Rect textBounds;
+        Rect cursorRect;
 
-        float lineSpacing = -1;
-        float lineHeight = -1;
+        int lineSpacing = -1;
+        int lineHeight = -1;
+
+        int touchX = 0;
+        int touchY = 0;
 
         public Editor(Context context, String text) {
             super(context);
-            rect = new RectF();
             mPaint = new Paint();
             textBounds = new Rect();
+            cursorRect = new Rect();
 
             mPaint.setTextSize(50f);
             mPaint.setColor(Color.WHITE);
@@ -73,30 +55,66 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onDraw(@NonNull Canvas canvas) {
+        protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-            float lastBottom = 0;
-            for(String line : lines){
+            int lastBottom = 0;
+            for (String line : lines) {
                 mPaint.getTextBounds(line, 0, line.length(), textBounds);
-                if(lineHeight == -1){ //populate only once
+
+                if (lineHeight == -1) {
+                    // Populate only once
                     lineHeight = textBounds.height();
-                    lineSpacing = lineHeight / 2f;
+                    lineSpacing = lineHeight / 2;
                 }
 
-                rect.left = 0;
-                rect.top = (int) (lastBottom + lineSpacing);
-                rect.right = textBounds.width();
-                rect.bottom = rect.top + lineHeight;
+                int lineTop = lastBottom;
+                int lineBottom = lineTop + lineHeight + lineSpacing;
 
-                if(rect.top >= getHeight()) break;//only draw visible lines
+                if (touchY >= lineTop &&
+                        touchY <= lineBottom) {
+                    mPaint.setColor(Color.DKGRAY);
+                    canvas.drawRect(0, lineTop, getWidth(), lineBottom, mPaint);
 
-                mPaint.setColor(Color.DKGRAY);
-                canvas.drawRect(rect, mPaint);
+                    int cumulativeWidth = 0;
+                    for (int i = 0; i < line.length(); i++) {
+                        float charWidth = mPaint.measureText(line, i, i + 1);
+                        cumulativeWidth += charWidth;
+
+                        if (touchX > cumulativeWidth) continue;
+                        Rect charRect = cursorRect;
+                        mPaint.getTextBounds(line, i, i + 1, charRect);
+                        charRect.left = cumulativeWidth - (int) charWidth;
+                        charRect.right = cumulativeWidth;
+                        charRect.top = lineTop;
+                        charRect.bottom = lineBottom;
+
+                        mPaint.setColor(0xFF888888);
+                        canvas.drawRect(charRect, mPaint);
+                        break;
+                    }
+                }
+
                 mPaint.setColor(Color.WHITE);
-                canvas.drawText(line, rect.left, rect.bottom, mPaint);
+                canvas.drawText(line, 0, lineBottom - lineSpacing, mPaint);
 
-                lastBottom = rect.bottom;
+                lastBottom = lineBottom;
+                if (lastBottom > getHeight()) break; //only draw visible lines
+            }
+
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    touchX = (int)event.getX();
+                    touchY = (int)event.getY();
+                    invalidate();
+                    return true;
+
+                default:
+                    return super.onTouchEvent(event);
             }
         }
     }
