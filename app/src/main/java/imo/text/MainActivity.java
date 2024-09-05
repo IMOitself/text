@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.View;
 import java.util.Arrays;
@@ -71,15 +70,15 @@ public class MainActivity extends Activity {
                 int lineTop = lastBottom;
                 int lineBottom = lineTop + lineHeight + lineSpacing;
 
-                if (touchY >= lineTop &&
-                        touchY <= lineBottom) {
+                if (touchY <= lineBottom)
+                if (touchY >= lineTop) {
                     mPaint.setColor(Color.DKGRAY);
                     canvas.drawRect(0, lineTop, getWidth(), lineBottom, mPaint);
 
                     int cumulativeWidth = 0;
                     for (int i = 0; i < line.length(); i++) {
                         float charWidth = mPaint.measureText(line, i, i + 1);
-                        cumulativeWidth += charWidth;
+                        cumulativeWidth += (int) charWidth;
 
                         if (touchX > cumulativeWidth) continue;
                         Rect charRect = cursorRect;
@@ -106,16 +105,13 @@ public class MainActivity extends Activity {
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    touchX = (int)event.getX();
-                    touchY = (int)event.getY();
-                    invalidate();
-                    return true;
-
-                default:
-                    return super.onTouchEvent(event);
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                touchX = (int) event.getX();
+                touchY = (int) event.getY();
+                invalidate();
+                return true;
             }
+            return super.onTouchEvent(event);
         }
     }
 }
