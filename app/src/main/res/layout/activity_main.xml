@@ -3,6 +3,11 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
+    <imo.text.Editor
+        android:id="@+id/editor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
