@@ -40,7 +40,6 @@ public class MainActivity extends Activity {
         int numberKeyHeight = normalKeyHeight * 3 / 4;
         int wideKeyWidth = normalKeyWidth + (normalKeyWidth / 2);
 
-        // Resize number keys (1st row)
         configKey(R.id.key_0, normalKeyWidth, numberKeyHeight);
         configKey(R.id.key_1, normalKeyWidth, numberKeyHeight);
         configKey(R.id.key_2, normalKeyWidth, numberKeyHeight);
@@ -52,7 +51,6 @@ public class MainActivity extends Activity {
         configKey(R.id.key_8, normalKeyWidth, numberKeyHeight);
         configKey(R.id.key_9, normalKeyWidth, numberKeyHeight);
 
-        // Resize letter keys (2nd row)
         configKey(R.id.key_Q, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_W, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_E, normalKeyWidth, normalKeyHeight);
@@ -64,7 +62,6 @@ public class MainActivity extends Activity {
         configKey(R.id.key_O, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_P, normalKeyWidth, normalKeyHeight);
 
-        // Resize letter keys (3rd row)
         configKey(R.id.key_A, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_S, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_D, normalKeyWidth, normalKeyHeight);
@@ -75,7 +72,6 @@ public class MainActivity extends Activity {
         configKey(R.id.key_K, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_L, normalKeyWidth, normalKeyHeight);
 
-        // Resize letter keys (4th row)
         configKey(R.id.key_shift, wideKeyWidth, normalKeyHeight);
         configKey(R.id.key_Z, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_X, normalKeyWidth, normalKeyHeight);
@@ -86,7 +82,6 @@ public class MainActivity extends Activity {
         configKey(R.id.key_M, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_delete, wideKeyWidth, normalKeyHeight);
 
-        // Resize special keys (5th row)
         configKey(R.id.key_ctrl, wideKeyWidth, normalKeyHeight);
         configKey(R.id.key_comma, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, (int) (normalKeyWidth * 0.1));
