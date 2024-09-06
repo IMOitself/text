@@ -60,11 +60,12 @@ public class Editor extends View {
         super.onDraw(canvas);
 
         int lastBottom = 0;
+        if(lines.isEmpty()) return;
         for (String line : lines) {
             mPaint.getTextBounds(line, 0, line.length(), textBounds);
 
+            // populate only once
             if (lineHeight == -1) {
-                // Populate only once
                 lineHeight = textBounds.height();
                 lineSpacing = lineHeight / 2;
             }
@@ -72,11 +73,13 @@ public class Editor extends View {
             int lineTop = lastBottom;
             int lineBottom = lineTop + lineHeight + lineSpacing;
 
-            if (touchY <= lineBottom)
-            if (touchY >= lineTop) {
+            if (touchY <= lineBottom
+            &&  touchY >= lineTop) {
+                // highlight touched line
                 mPaint.setColor(Color.DKGRAY);
                 canvas.drawRect(0, lineTop, getWidth(), lineBottom, mPaint);
 
+                // highlight touched char
                 int cumulativeWidth = 0;
                 for (int i = 0; i < line.length(); i++) {
                     float charWidth = mPaint.measureText(line, i, i + 1);
@@ -99,7 +102,9 @@ public class Editor extends View {
             canvas.drawText(line, 0, lineBottom - lineSpacing, mPaint);
 
             lastBottom = lineBottom;
-            if (lastBottom > getHeight()) break; //only draw visible lines
+
+            //only draw visible lines
+            if (lastBottom > getHeight()) break;
         }
 
     }
