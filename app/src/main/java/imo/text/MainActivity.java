@@ -1,6 +1,7 @@
 package imo.text;
 
 import android.app.Activity;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -20,10 +21,10 @@ public class MainActivity extends Activity {
         }
         editor.setText(sb.toString());
 
-        resizeKeyboard();
+        configKeyboard();
     }
 
-    public void resizeKeyboard() {
+    public void configKeyboard() {
         // Get screen dimensions
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -40,64 +41,77 @@ public class MainActivity extends Activity {
         int wideKeyWidth = normalKeyWidth + (normalKeyWidth / 2);
 
         // Resize number keys (1st row)
-        resizeView(R.id.key_0, normalKeyWidth, numberKeyHeight);
-        resizeView(R.id.key_1, normalKeyWidth, numberKeyHeight);
-        resizeView(R.id.key_2, normalKeyWidth, numberKeyHeight);
-        resizeView(R.id.key_3, normalKeyWidth, numberKeyHeight);
-        resizeView(R.id.key_4, normalKeyWidth, numberKeyHeight);
-        resizeView(R.id.key_5, normalKeyWidth, numberKeyHeight);
-        resizeView(R.id.key_6, normalKeyWidth, numberKeyHeight);
-        resizeView(R.id.key_7, normalKeyWidth, numberKeyHeight);
-        resizeView(R.id.key_8, normalKeyWidth, numberKeyHeight);
-        resizeView(R.id.key_9, normalKeyWidth, numberKeyHeight);
+        configKey(R.id.key_0, normalKeyWidth, numberKeyHeight);
+        configKey(R.id.key_1, normalKeyWidth, numberKeyHeight);
+        configKey(R.id.key_2, normalKeyWidth, numberKeyHeight);
+        configKey(R.id.key_3, normalKeyWidth, numberKeyHeight);
+        configKey(R.id.key_4, normalKeyWidth, numberKeyHeight);
+        configKey(R.id.key_5, normalKeyWidth, numberKeyHeight);
+        configKey(R.id.key_6, normalKeyWidth, numberKeyHeight);
+        configKey(R.id.key_7, normalKeyWidth, numberKeyHeight);
+        configKey(R.id.key_8, normalKeyWidth, numberKeyHeight);
+        configKey(R.id.key_9, normalKeyWidth, numberKeyHeight);
 
         // Resize letter keys (2nd row)
-        resizeView(R.id.key_Q, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_W, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_E, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_R, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_T, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_Y, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_U, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_I, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_O, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_P, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_Q, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_W, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_E, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_R, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_T, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_Y, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_U, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_I, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_O, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_P, normalKeyWidth, normalKeyHeight);
 
         // Resize letter keys (3rd row)
-        resizeView(R.id.key_A, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_S, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_D, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_F, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_G, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_H, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_J, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_K, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_L, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_A, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_S, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_D, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_F, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_G, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_H, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_J, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_K, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_L, normalKeyWidth, normalKeyHeight);
 
         // Resize letter keys (4th row)
-        resizeView(R.id.key_shift, wideKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_Z, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_X, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_C, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_V, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_B, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_N, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_M, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_delete, wideKeyWidth, normalKeyHeight);
+        configKey(R.id.key_shift, wideKeyWidth, normalKeyHeight);
+        configKey(R.id.key_Z, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_X, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_C, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_V, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_B, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_N, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_M, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_delete, wideKeyWidth, normalKeyHeight);
 
         // Resize special keys (5th row)
-        resizeView(R.id.key_ctrl, wideKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_comma, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_space, normalKeyWidth * 5, normalKeyHeight);
-        resizeView(R.id.key_period, normalKeyWidth, normalKeyHeight);
-        resizeView(R.id.key_go, wideKeyWidth, normalKeyHeight);
+        configKey(R.id.key_ctrl, wideKeyWidth, normalKeyHeight);
+        configKey(R.id.key_comma, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, (int) (normalKeyWidth * 0.1));
+        configKey(R.id.key_period, normalKeyWidth, normalKeyHeight);
+        configKey(R.id.key_go, wideKeyWidth, normalKeyHeight);
     }
 
-    private void resizeView(int viewId, int width, int height) {
+    private void configKey(int viewId, int width, int height) {
+        configKey(viewId, width, height, -1);
+    }
+
+    private void configKey(int viewId, int width, int height, int custompaddingH){
         View view = findViewById(viewId);
         ViewGroup.LayoutParams params = view.getLayoutParams();
         params.width = width;
         params.height = height;
         view.setLayoutParams(params);
+
+        LayerDrawable layerDrawable = (LayerDrawable) getResources().getDrawable(R.drawable.layer_key_bg);
+        int paddingH = (int) (width * 0.1); // 10% of width
+        int paddingV = (int) (height * 0.1); // 10% of height
+        if (custompaddingH != -1) paddingH = custompaddingH;
+
+        layerDrawable.setLayerInset(0, paddingH, paddingV, paddingH, paddingV);
+
+        view.setBackground(layerDrawable);
     }
 }
