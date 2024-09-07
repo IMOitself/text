@@ -4,7 +4,7 @@ a code editor project for **Android Studio** and **AIDE** :3
 <details>
 <summary>note:</summary>
 
-idk if it works on vanilla AIDE, so if it doesnt, just wake me:D
+it works as AIDE project, so if it doesnt, just wake me:D
 [open](https://github.com/IMOitself/text/issues/new/choose)
 
 </details>
