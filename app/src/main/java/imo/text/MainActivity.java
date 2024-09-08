@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends Activity {
 
@@ -39,54 +42,81 @@ public class MainActivity extends Activity {
         int normalKeyHeight = keyboardHeight / 4; // (2/3 of keyboard height) / 5 rows
         int numberKeyHeight = normalKeyHeight * 3 / 4;
         int wideKeyWidth = normalKeyWidth + (normalKeyWidth / 2);
-
-        configKey(R.id.key_0, normalKeyWidth, numberKeyHeight);
-        configKey(R.id.key_1, normalKeyWidth, numberKeyHeight);
-        configKey(R.id.key_2, normalKeyWidth, numberKeyHeight);
-        configKey(R.id.key_3, normalKeyWidth, numberKeyHeight);
-        configKey(R.id.key_4, normalKeyWidth, numberKeyHeight);
-        configKey(R.id.key_5, normalKeyWidth, numberKeyHeight);
-        configKey(R.id.key_6, normalKeyWidth, numberKeyHeight);
-        configKey(R.id.key_7, normalKeyWidth, numberKeyHeight);
-        configKey(R.id.key_8, normalKeyWidth, numberKeyHeight);
-        configKey(R.id.key_9, normalKeyWidth, numberKeyHeight);
-
-        configKey(R.id.key_Q, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_W, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_E, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_R, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_T, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_Y, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_U, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_I, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_O, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_P, normalKeyWidth, normalKeyHeight);
-
-        configKey(R.id.key_A, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_S, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_D, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_F, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_G, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_H, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_J, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_K, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_L, normalKeyWidth, normalKeyHeight);
-
-        configKey(R.id.key_shift, wideKeyWidth, normalKeyHeight);
-        configKey(R.id.key_Z, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_X, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_C, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_V, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_B, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_N, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_M, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_backspace, wideKeyWidth, normalKeyHeight);
-
-        configKey(R.id.key_ctrl, wideKeyWidth, normalKeyHeight);
-        configKey(R.id.key_comma, normalKeyWidth, normalKeyHeight);
+        
+        List<TextView> allKeyViews = new ArrayList<>();
+        
+        int[] numberSizeKeys = {
+            // first row
+            R.id.key_1, 
+            R.id.key_2,
+            R.id.key_3,
+            R.id.key_4,
+            R.id.key_5,
+            R.id.key_6,
+            R.id.key_7,
+            R.id.key_8,
+            R.id.key_9,
+            R.id.key_0
+        };
+        
+        int[] normalSizeKeys = {
+            // second row
+            R.id.key_Q,
+            R.id.key_W,
+            R.id.key_E,
+            R.id.key_R,
+            R.id.key_T,
+            R.id.key_Y,
+            R.id.key_U,
+            R.id.key_I,
+            R.id.key_O,
+            R.id.key_P,
+            // third row
+            R.id.key_A,
+            R.id.key_S,
+            R.id.key_D,
+            R.id.key_F,
+            R.id.key_G,
+            R.id.key_H,
+            R.id.key_J,
+            R.id.key_K,
+            R.id.key_L,
+            // fourth row
+            R.id.key_Z,
+            R.id.key_X,
+            R.id.key_C,
+            R.id.key_V,
+            R.id.key_B,
+            R.id.key_N,
+            R.id.key_M,
+            // fifth row
+            R.id.key_comma,
+            R.id.key_period
+        };
+        
+        int[] wideSizeKeys = {
+            R.id.key_shift,
+            R.id.key_backspace,
+            R.id.key_ctrl,
+            R.id.key_go
+        };
+        
+        for(int id : numberSizeKeys){
+            configKey(id, normalKeyWidth, numberKeyHeight);
+            allKeyViews.add(findViewById(id));
+        }
+        for(int id : normalSizeKeys){
+            configKey(id, normalKeyWidth, normalKeyHeight);
+            allKeyViews.add(findViewById(id));
+        }
+        
+        for(int id : wideSizeKeys){
+            configKey(id, wideKeyWidth, normalKeyHeight);
+            allKeyViews.add(findViewById(id));
+        }
+        
         configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, (int) (normalKeyWidth * 0.1));
-        configKey(R.id.key_period, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_go, wideKeyWidth, normalKeyHeight);
+        allKeyViews.add(findViewById(R.id.key_space));
     }
 
     private void configKey(int viewId, int width, int height) {
