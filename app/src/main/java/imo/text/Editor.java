@@ -19,7 +19,7 @@ public class Editor extends View {
     Paint mPaint;
     Rect textBounds;
     Rect cursorRect;
-
+    
     int lineSpacing = -1;
     int lineHeight = -1;
 
@@ -45,7 +45,7 @@ public class Editor extends View {
         mPaint = new Paint();
         textBounds = new Rect();
         cursorRect = new Rect();
-
+        
         mPaint.setTextSize(50f);
         mPaint.setColor(Color.WHITE);
     }
@@ -81,30 +81,39 @@ public class Editor extends View {
 
                 // highlight touched char
                 int cumulativeWidth = 0;
+                boolean isCharTouched = false;
                 for (int i = 0; i < line.length(); i++) {
                     float charWidth = mPaint.measureText(line, i, i + 1);
                     cumulativeWidth += (int) charWidth;
 
                     if (touchX > cumulativeWidth) continue;
-                    Rect charRect = cursorRect;
-                    mPaint.getTextBounds(line, i, i + 1, charRect);
-                    charRect.left = cumulativeWidth - (int) charWidth;
-                    charRect.right = cumulativeWidth;
-                    charRect.top = lineTop;
-                    charRect.bottom = lineBottom;
-
-                    mPaint.setColor(0xFF888888);
-                    canvas.drawRect(charRect, mPaint);
+                    
+                    cursorRect.left = cumulativeWidth - (int) charWidth;
+                    cursorRect.right = cumulativeWidth;
+                    isCharTouched = true;
                     break;
                 }
+                if (!isCharTouched) { // didnt touched any char
+                    cursorRect.left = cumulativeWidth;
+                    cursorRect.right = cumulativeWidth + (int) mPaint.measureText("a");
+                }
+                
+                cursorRect.top = lineTop;
+                cursorRect.bottom = lineBottom;
+                
+                mPaint.setColor(0xFF888888);
+                canvas.drawRect(cursorRect, mPaint);
             }
+            
+            // draw text
             mPaint.setColor(Color.WHITE);
             canvas.drawText(line, 0, lineBottom - lineSpacing, mPaint);
 
+            // only draw visible lines
+            if (lineBottom > getHeight()) break;
+            
+            // record last lineBottom for the next loop
             lastBottom = lineBottom;
-
-            //only draw visible lines
-            if (lastBottom > getHeight()) break;
         }
 
     }
