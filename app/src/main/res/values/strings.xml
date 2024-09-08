@@ -38,9 +38,9 @@
     <string name="y">Y</string>
     <string name="z">Z</string>
     <string name="comma">,</string>
-    <string name="delete"><![CDATA[<]]></string>
+    <string name="backspace"><![CDATA[<]]></string>
     <string name="period">.</string>
     <string name="ctrl">ctrl</string>
     <string name="shift">shift</string>
-    <string name="go">→</string>
+    <string name="go"><![CDATA[>]]></string>
 </resources>

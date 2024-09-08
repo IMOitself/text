@@ -1,357 +1,364 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent"
+     android:gravity="center">
 
     <imo.text.Editor
-        android:id="@+id/editor"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         android:id="@+id/editor" />
 
     <LinearLayout
-        android:id="@+id/keyboard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/primary"
-        android:orientation="vertical">
+         android:layout_height="wrap_content"
+         android:layout_width="match_parent"
+         android:background="@color/primary"
+         android:orientation="vertical"
+         android:layout_alignParentBottom="true"
+         android:id="@+id/keyboard">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:gravity="center_horizontal"
+             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/key_1"
-                android:layout_width="25dp"
-                android:layout_height="37dp"
-                android:gravity="center"
-                android:text="@string/_1" />
+                 android:layout_height="37dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_1"
+                 android:text="@string/_1" />
 
             <TextView
-                android:id="@+id/key_2"
-                android:layout_width="25dp"
-                android:layout_height="37dp"
-                android:gravity="center"
-                android:text="@string/_2" />
+                 android:layout_height="37dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_2"
+                 android:text="@string/_2" />
 
             <TextView
-                android:id="@+id/key_3"
-                android:layout_width="25dp"
-                android:layout_height="37dp"
-                android:gravity="center"
-                android:text="@string/_3" />
+                 android:layout_height="37dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_3"
+                 android:text="@string/_3" />
 
             <TextView
-                android:id="@+id/key_4"
-                android:layout_width="25dp"
-                android:layout_height="37dp"
-                android:gravity="center"
-                android:text="@string/_4" />
+                 android:layout_height="37dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_4"
+                 android:text="@string/_4" />
 
             <TextView
-                android:id="@+id/key_5"
-                android:layout_width="25dp"
-                android:layout_height="37dp"
-                android:gravity="center"
-                android:text="@string/_5" />
+                 android:layout_height="37dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_5"
+                 android:text="@string/_5" />
 
             <TextView
-                android:id="@+id/key_6"
-                android:layout_width="25dp"
-                android:layout_height="37dp"
-                android:gravity="center"
-                android:text="@string/_6" />
+                 android:layout_height="37dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_6"
+                 android:text="@string/_6" />
 
             <TextView
-                android:id="@+id/key_7"
-                android:layout_width="25dp"
-                android:layout_height="37dp"
-                android:gravity="center"
-                android:text="@string/_7" />
+                 android:layout_height="37dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_7"
+                 android:text="@string/_7" />
 
             <TextView
-                android:id="@+id/key_8"
-                android:layout_width="25dp"
-                android:layout_height="37dp"
-                android:gravity="center"
-                android:text="@string/_8" />
+                 android:layout_height="37dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_8"
+                 android:text="@string/_8" />
 
             <TextView
-                android:id="@+id/key_9"
-                android:layout_width="25dp"
-                android:layout_height="37dp"
-                android:gravity="center"
-                android:text="@string/_9" />
+                 android:layout_height="37dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_9"
+                 android:text="@string/_9" />
 
             <TextView
-                android:id="@+id/key_0"
-                android:layout_width="25dp"
-                android:layout_height="37dp"
-                android:gravity="center"
-                android:text="@string/_0" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/key_Q"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/q" />
-
-            <TextView
-                android:id="@+id/key_W"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/w" />
-
-            <TextView
-                android:id="@+id/key_E"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/e" />
-
-            <TextView
-                android:id="@+id/key_R"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/r" />
-
-            <TextView
-                android:id="@+id/key_T"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/t" />
-
-            <TextView
-                android:id="@+id/key_Y"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/y" />
-
-            <TextView
-                android:id="@+id/key_U"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/u" />
-
-            <TextView
-                android:id="@+id/key_I"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/i" />
-
-            <TextView
-                android:id="@+id/key_O"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/o" />
-
-            <TextView
-                android:id="@+id/key_P"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/p" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/key_A"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/a" />
-
-            <TextView
-                android:id="@+id/key_S"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/s" />
-
-            <TextView
-                android:id="@+id/key_D"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/d" />
-
-            <TextView
-                android:id="@+id/key_F"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/f" />
-
-            <TextView
-                android:id="@+id/key_G"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/g" />
-
-            <TextView
-                android:id="@+id/key_H"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/h" />
-
-            <TextView
-                android:id="@+id/key_J"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/j" />
-
-            <TextView
-                android:id="@+id/key_K"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/k" />
-
-            <TextView
-                android:id="@+id/key_L"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/l" />
+                 android:layout_height="37dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_0"
+                 android:text="@string/_0" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:gravity="center_horizontal"
+             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/key_shift"
-                android:layout_width="37dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/shift" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_Q"
+                 android:text="@string/q" />
 
             <TextView
-                android:id="@+id/key_Z"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/z" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_W"
+                 android:text="@string/w" />
 
             <TextView
-                android:id="@+id/key_X"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/x" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_E"
+                 android:text="@string/e" />
 
             <TextView
-                android:id="@+id/key_C"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/c" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_R"
+                 android:text="@string/r" />
 
             <TextView
-                android:id="@+id/key_V"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/v" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_T"
+                 android:text="@string/t" />
 
             <TextView
-                android:id="@+id/key_B"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/b" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_Y"
+                 android:text="@string/y" />
 
             <TextView
-                android:id="@+id/key_N"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/n" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_U"
+                 android:text="@string/u" />
 
             <TextView
-                android:id="@+id/key_M"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/m" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_I"
+                 android:text="@string/i" />
 
             <TextView
-                android:id="@+id/key_delete"
-                android:layout_width="37dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/delete" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_O"
+                 android:text="@string/o" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_P"
+                 android:text="@string/p" />
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:gravity="center_horizontal"
+             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/key_ctrl"
-                android:layout_width="37dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/ctrl" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_A"
+                 android:text="@string/a" />
 
             <TextView
-                android:id="@+id/key_comma"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/comma" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_S"
+                 android:text="@string/s" />
 
             <TextView
-                android:id="@+id/key_space"
-                android:layout_width="125dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_D"
+                 android:text="@string/d" />
 
             <TextView
-                android:id="@+id/key_period"
-                android:layout_width="25dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/period" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_F"
+                 android:text="@string/f" />
 
             <TextView
-                android:id="@+id/key_go"
-                android:layout_width="37dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="@string/go" />
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_G"
+                 android:text="@string/g" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_H"
+                 android:text="@string/h" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_J"
+                 android:text="@string/j" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_K"
+                 android:text="@string/k" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_L"
+                 android:text="@string/l" />
+
         </LinearLayout>
+
+        <LinearLayout
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:gravity="center_horizontal"
+             android:orientation="horizontal">
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="37dp"
+                 android:gravity="center"
+                 android:id="@+id/key_shift"
+                 android:text="@string/shift" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_Z"
+                 android:text="@string/z" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_X"
+                 android:text="@string/x" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_C"
+                 android:text="@string/c" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_V"
+                 android:text="@string/v" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_B"
+                 android:text="@string/b" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_N"
+                 android:text="@string/n" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_M"
+                 android:text="@string/m" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="37dp"
+                 android:gravity="center"
+                 android:id="@+id/key_backspace"
+                 android:text="@string/backspace" />
+
+        </LinearLayout>
+
+        <LinearLayout
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:gravity="center_horizontal"
+             android:orientation="horizontal">
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="37dp"
+                 android:gravity="center"
+                 android:id="@+id/key_ctrl"
+                 android:text="@string/ctrl" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_comma"
+                 android:text="@string/comma" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="125dp"
+                 android:gravity="center"
+                 android:id="@+id/key_space"
+                 android:text="" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="25dp"
+                 android:gravity="center"
+                 android:id="@+id/key_period"
+                 android:text="@string/period" />
+
+            <TextView
+                 android:layout_height="50dp"
+                 android:layout_width="37dp"
+                 android:gravity="center"
+                 android:id="@+id/key_go"
+                 android:text="@string/go" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

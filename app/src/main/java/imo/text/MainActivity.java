@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
         configKey(R.id.key_B, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_N, normalKeyWidth, normalKeyHeight);
         configKey(R.id.key_M, normalKeyWidth, normalKeyHeight);
-        configKey(R.id.key_delete, wideKeyWidth, normalKeyHeight);
+        configKey(R.id.key_backspace, wideKeyWidth, normalKeyHeight);
 
         configKey(R.id.key_ctrl, wideKeyWidth, normalKeyHeight);
         configKey(R.id.key_comma, normalKeyWidth, normalKeyHeight);
