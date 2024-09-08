@@ -17,6 +17,7 @@ public class Keyboard {
     static Activity mActivity;
     static int keyPaddingW, keyPaddingH;
     static int keyCornerRadius;
+    static float keyTextSize = -1;
 
     public static void configKeyboard(Activity activity){
         mActivity = activity;
@@ -84,8 +85,8 @@ public class Keyboard {
         int screenWidth = displayMetrics.widthPixels;
         int screenHeight = displayMetrics.heightPixels;
 
-        // Calculate keyboard height (1/3 of screen height)
-        int keyboardHeight = screenHeight / 3;
+        // Calculate keyboard height (between 1/3 and 1/4 of screen)
+        int keyboardHeight = (screenHeight * 7) / 24;
 
         // Calculate key dimensions
         int normalKeyWidth = screenWidth / 10;
@@ -99,26 +100,22 @@ public class Keyboard {
 
         // Set number keys size (shorter than normal)
         for(int id : numberSizeKeys){
-            configKey(id, normalKeyWidth, numberKeyHeight, R.color.key_primary);
-            allKeyViews.add((TextView) mActivity.findViewById(id));
+            allKeyViews.add(configKey(id, normalKeyWidth, numberKeyHeight, R.color.key_primary));
         }
         // Set default keys size
         for(int id : normalSizeKeys){
-            configKey(id, normalKeyWidth, normalKeyHeight, R.color.key_primary);
-            allKeyViews.add((TextView) mActivity.findViewById(id));
+            allKeyViews.add(configKey(id, normalKeyWidth, normalKeyHeight, R.color.key_primary));
         }
         // Set special keys size (wider than normal)
         for(int id : wideSizeKeys){
-            configKey(id, wideKeyWidth, normalKeyHeight, R.color.key_secondary);
-            allKeyViews.add((TextView) mActivity.findViewById(id));
+            allKeyViews.add(configKey(id, wideKeyWidth, normalKeyHeight, R.color.key_secondary));
         }
         // Set space key size (5x wider than normal)
-        configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary);
-        allKeyViews.add((TextView) mActivity.findViewById(R.id.key_space));
+        allKeyViews.add(configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary));
     }
 
-    private static void configKey(int viewId, int width, int height, int colorId){
-        View view = mActivity.findViewById(viewId);
+    private static TextView configKey(int viewId, int width, int height, int colorId){
+        TextView view = mActivity.findViewById(viewId);
         ViewGroup.LayoutParams params = view.getLayoutParams();
         params.width = width;
         params.height = height;
@@ -132,12 +129,40 @@ public class Keyboard {
         rect.top = 0 + keyPaddingH;
         rect.right = width - keyPaddingW;
         rect.bottom = height - keyPaddingH;
-
+        
         Paint paint = new Paint();
         paint.setColor(mActivity.getResources().getColor(colorId));
 
         canvas.drawRoundRect(rect, keyCornerRadius, keyCornerRadius, paint);
 
+        if(keyTextSize != -1) keyTextSize = calculateTextSizeToFitRect(paint, rect);
+        view.setTextSize(keyTextSize);
+        
         view.setBackground(new BitmapDrawable(mActivity.getResources(), bitmap));
+        return view;
     }
+    
+    public static float calculateTextSizeToFitRect(Paint paint, RectF bounds) {
+    float low = 1f;
+    float high = 100f;
+    float optimalSize = low;
+    
+    String text = "a";
+    
+    while (low <= high) {
+        float mid = (low + high) / 2f;
+
+        paint.setTextSize(mid);
+        int lineCount = paint.breakText(text, true, bounds.width(), null);
+
+        if (lineCount * paint.getFontSpacing() <= bounds.height() && lineCount > 0) {
+            optimalSize = mid;
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+
+    return optimalSize;
+}
 }
