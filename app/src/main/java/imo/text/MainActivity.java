@@ -1,7 +1,11 @@
 package imo.text;
 
 import android.app.Activity;
-import android.graphics.drawable.LayerDrawable;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -10,41 +14,38 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Editor editor = findViewById(R.id.editor);
         StringBuilder sb = new StringBuilder();
         sb.append("america ya!");
-        for (int i = 0; i < 99; i++) {
+        for(int i = 0; i < 99; i++){
             sb.append("\nhallo:D");
         }
         editor.setText(sb.toString());
 
-        configKeyboard();
+
+        View keyboard = findViewById(R.id.keyboard);
+        keyboard.post(new Runnable(){
+                @Override
+                public void run(){
+                    configKeyboard();
+                }
+            });
     }
 
-    public void configKeyboard() {
-        // Get screen dimensions
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels;
-        int screenHeight = displayMetrics.heightPixels;
+    //TODO: move all this keyboard configuring stuff to another file
+    int keyPaddingW, keyPaddingH;
+    int keyCornerRadius;
 
-        // Calculate keyboard height (1/3 of screen height)
-        int keyboardHeight = screenHeight / 3;
-
-        // Calculate key dimensions
-        int normalKeyWidth = screenWidth / 10;
-        int normalKeyHeight = keyboardHeight / 4; // (2/3 of keyboard height) / 5 rows
-        int numberKeyHeight = normalKeyHeight * 3 / 4;
-        int wideKeyWidth = normalKeyWidth + (normalKeyWidth / 2);
-        
+    public void configKeyboard(){
         List<TextView> allKeyViews = new ArrayList<>();
-        
+
         int[] numberSizeKeys = {
             // first row
             R.id.key_1, 
@@ -58,7 +59,7 @@ public class MainActivity extends Activity {
             R.id.key_9,
             R.id.key_0
         };
-        
+
         int[] normalSizeKeys = {
             // second row
             R.id.key_Q,
@@ -93,50 +94,74 @@ public class MainActivity extends Activity {
             R.id.key_comma,
             R.id.key_period
         };
-        
+
         int[] wideSizeKeys = {
             R.id.key_shift,
             R.id.key_backspace,
             R.id.key_ctrl,
             R.id.key_go
         };
-        
+
+        // Get screen dimensions
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
+
+        // Calculate keyboard height (1/3 of screen height)
+        int keyboardHeight = screenHeight / 3;
+
+        // Calculate key dimensions
+        int normalKeyWidth = screenWidth / 10;
+        int normalKeyHeight = keyboardHeight / 4;
+        int numberKeyHeight = normalKeyHeight * 3 / 4;
+        int wideKeyWidth = normalKeyWidth + (normalKeyWidth / 2);
+
+        keyPaddingW = (int) (normalKeyWidth * 0.1f); // 10% width
+        keyPaddingH = (int) (normalKeyHeight * 0.1f);// 10% height
+        keyCornerRadius = normalKeyWidth / 8;
+
+        // Set number keys size (shorter than normal)
         for(int id : numberSizeKeys){
-            configKey(id, normalKeyWidth, numberKeyHeight);
-            allKeyViews.add(findViewById(id));
+            configKey(id, normalKeyWidth, numberKeyHeight, R.color.key_primary);
+            allKeyViews.add((TextView) findViewById(id));
         }
+        // Set default keys size
         for(int id : normalSizeKeys){
-            configKey(id, normalKeyWidth, normalKeyHeight);
-            allKeyViews.add(findViewById(id));
+            configKey(id, normalKeyWidth, normalKeyHeight, R.color.key_primary);
+            allKeyViews.add((TextView) findViewById(id));
         }
-        
+        // Set special keys size (wider than normal)
         for(int id : wideSizeKeys){
-            configKey(id, wideKeyWidth, normalKeyHeight);
-            allKeyViews.add(findViewById(id));
+            configKey(id, wideKeyWidth, normalKeyHeight, R.color.key_secondary);
+            allKeyViews.add((TextView) findViewById(id));
         }
-        
-        configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, (int) (normalKeyWidth * 0.1));
-        allKeyViews.add(findViewById(R.id.key_space));
+        // Set space key size (5x wider than normal)
+        configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary);
+        allKeyViews.add((TextView) findViewById(R.id.key_space));
     }
 
-    private void configKey(int viewId, int width, int height) {
-        configKey(viewId, width, height, -1);
-    }
-
-    private void configKey(int viewId, int width, int height, int custompaddingH){
+    private void configKey(int viewId, int width, int height, int colorId){
         View view = findViewById(viewId);
         ViewGroup.LayoutParams params = view.getLayoutParams();
         params.width = width;
         params.height = height;
         view.setLayoutParams(params);
 
-        LayerDrawable layerDrawable = (LayerDrawable) getResources().getDrawable(R.drawable.layer_key_bg);
-        int paddingH = (int) (width * 0.1); // 10% of width
-        int paddingV = (int) (height * 0.1); // 10% of height
-        if (custompaddingH != -1) paddingH = custompaddingH;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
 
-        layerDrawable.setLayerInset(0, paddingH, paddingV, paddingH, paddingV);
+        RectF rect = new RectF();
+        rect.left = 0 + keyPaddingW;
+        rect.top = 0 + keyPaddingH;
+        rect.right = width - keyPaddingW;
+        rect.bottom = height - keyPaddingH;
+        
+        Paint paint = new Paint();
+        paint.setColor(getResources().getColor(colorId));
 
-        view.setBackground(layerDrawable);
+        canvas.drawRoundRect(rect, keyCornerRadius, keyCornerRadius, paint);
+
+        view.setBackground(new BitmapDrawable(getResources(), bitmap));
     }
 }

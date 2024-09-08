@@ -5,4 +5,9 @@
     <color name="tertiary">#616161</color>
     <color name="text_color">#FFFFFF</color>
     <color name="text_color_hint">#757575</color>
+    
+    <!--KEYBOARD-->
+    <color name="key_primary">#424242</color>
+    <color name="key_secondary">#2E2E2E</color>
+    <color name="key_tertiary">#616161</color>
 </resources>
