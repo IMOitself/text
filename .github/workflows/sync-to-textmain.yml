@@ -1,0 +1,42 @@
+name: Sync to textMain repo
+
+on:
+  push:
+    branches:
+      - main  # or whatever your default branch is named
+    paths:
+      - 'app/src/main/**'  # Only trigger on changes in this directory
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout text repo
+      uses: actions/checkout@v2
+      with:
+        path: text
+
+    - name: Checkout textMain repo
+      uses: actions/checkout@v2
+      with:
+        repository: IMOitself/textMain
+        token: ${{ secrets.PAT_TOKEN }}
+        path: textMain
+
+    - name: Sync changes
+      run: |
+        # Get the latest commit message
+        cd text
+        COMMIT_MSG=$(git log -1 --pretty=%B)
+        cd ..
+
+        # Sync changes
+        cd textMain
+        rm -rf *
+        cp -R ../text/app/src/main/* .
+        
+        git config user.name IMO-AndroidStudio
+        git config user.email russjonn@gmail.com
+        git add .
+        git commit -m "$COMMIT_MSG" || echo "No changes to commit"
+        git push
