@@ -28,6 +28,8 @@ it works as AIDE project, so if it doesnt, just wake me:D
 <details>
 <summary>use in AIDE</summary>
 
+###### Note: when compiled as an app it will be as an old android version. idk why it does that
+
 1. open AIDE.
 
 2. open file browser window
@@ -38,6 +40,6 @@ it works as AIDE project, so if it doesnt, just wake me:D
 
 5. click **Clone** to download the repository.
 
-6. once cloned, click **Open this Android Project** to start working on it.
+6. once cloned, click **Open this Android Project**
 
 </details>
