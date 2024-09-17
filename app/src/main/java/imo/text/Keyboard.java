@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class Keyboard {
 
     public static void configKeyboard(Activity activity){
         mActivity = activity;
-        List<TextView> allKeyViews = new ArrayList<>();
 
         int[] numberSizeKeys = {
             // first row
@@ -75,8 +73,7 @@ public class Keyboard {
         int[] wideSizeKeys = {
             R.id.key_shift,
             R.id.key_backspace,
-            R.id.key_ctrl,
-            R.id.key_go
+            R.id.key_ctrl
         };
 
         // Get screen dimensions
@@ -98,20 +95,20 @@ public class Keyboard {
         keyPaddingH = (int) (normalKeyHeight * 0.1f);// 10% height
         keyCornerRadius = normalKeyWidth / 8;
 
-        // Set number keys size (shorter than normal)
-        for(int id : numberSizeKeys){
+        // Configure keys
+        List<TextView> allKeyViews = new ArrayList<>();
+
+        for (int id : numberSizeKeys)
             allKeyViews.add(configKey(id, normalKeyWidth, numberKeyHeight, R.color.key_primary));
-        }
-        // Set default keys size
-        for(int id : normalSizeKeys){
+
+        for (int id : normalSizeKeys)
             allKeyViews.add(configKey(id, normalKeyWidth, normalKeyHeight, R.color.key_primary));
-        }
-        // Set special keys size (wider than normal)
-        for(int id : wideSizeKeys){
+
+        for (int id : wideSizeKeys)
             allKeyViews.add(configKey(id, wideKeyWidth, normalKeyHeight, R.color.key_secondary));
-        }
-        // Set space key size (5x wider than normal)
+
         allKeyViews.add(configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary));
+        allKeyViews.add(configKey(R.id.key_go, wideKeyWidth, normalKeyHeight, R.color.key_tertiary));
     }
 
     private static TextView configKey(int viewId, int width, int height, int colorId){
@@ -141,28 +138,24 @@ public class Keyboard {
         view.setBackground(new BitmapDrawable(mActivity.getResources(), bitmap));
         return view;
     }
-    
+
     public static float calculateTextSizeToFitRect(Paint paint, RectF bounds) {
-    float low = 1f;
-    float high = 100f;
-    float optimalSize = low;
-    
-    String text = "a";
-    
-    while (low <= high) {
-        float mid = (low + high) / 2f;
+        float low = 1f, high = 100f, size = low;
+        String text = "a";
 
-        paint.setTextSize(mid);
-        int lineCount = paint.breakText(text, true, bounds.width(), null);
+        while (low <= high) {
+            float mid = (low + high) / 2f;
+            paint.setTextSize(mid);
+            int lines = paint.breakText(text, true, bounds.width(), null);
 
-        if (lineCount * paint.getFontSpacing() <= bounds.height() && lineCount > 0) {
-            optimalSize = mid;
-            low = mid + 1;
-        } else {
-            high = mid - 1;
+            if (lines * paint.getFontSpacing() <= bounds.height() && lines > 0) {
+                size = mid;
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
         }
-    }
 
-    return optimalSize;
-}
+        return size;
+    }
 }
