@@ -3,7 +3,10 @@ name: Sync to textMain repo
 on:
   push:
     branches:
-      - main  # or whatever your default branch is named
+      - main
+    paths:
+      - 'app/src/main/**'  # Only trigger on changes in this directory
+
 
 jobs:
   sync:
