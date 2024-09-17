@@ -12,16 +12,20 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Editor extends View {
-    List<String> lines = new ArrayList<>();
-
+    List<Line> Lines = new ArrayList<>();
+    
     Paint mPaint;
     Rect textBounds;
     Rect cursorRect;
     
     int touchX = 0;
     int touchY = 0;
+    
+    int lineHeight = -1;
+    int lineSpacing = 0;
 
     public Editor(Context context) {
         super(context);
@@ -48,23 +52,25 @@ public class Editor extends View {
     }
 
     public void setText(String text){
-        lines = Arrays.asList(text.split("\n"));
-        invalidate();
+        for(String textLine : text.split("\n")){
+            Lines.add(new Line(textLine));
+        }
+        invalidate(); // will call onDraw()
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (lines.isEmpty()) return;
+        if (Lines.isEmpty()) return;
 
         int lastBottom = 0;
-        int lineHeight = -1;
-        int lineSpacing = 0;
-
-        for (String line : lines) {
+        
+        for (Line line : Lines) {
+            String lineText = line.text;
+            
             // Measure text bounds
-            mPaint.getTextBounds(line, 0, line.length(), textBounds);
+            mPaint.getTextBounds(lineText, 0, lineText.length(), textBounds);
 
             // Initialize line height and spacing (only once)
             if (lineHeight == -1) {
@@ -73,40 +79,36 @@ public class Editor extends View {
             }
 
             // Calculate line position
-            int lineTop = lastBottom;
-            int lineBottom = lineTop + lineHeight + lineSpacing;
+            line.top = lastBottom;
+            line.bottom = line.top + lineHeight + lineSpacing;
 
             // Check if line is touched
-            if (isTouched(lineTop, lineBottom)) {
-                highlightTouchedLine(canvas, lineTop, lineBottom);
-                drawCursor(canvas, line, lineTop, lineBottom);
+            if (line.isTouched(touchY)) {
+                drawHighlightLine(canvas, line.top, line.bottom);
+                drawCursor(canvas, touchX, lineText, line.top, line.bottom);
             }
 
             // Draw text
-            drawText(canvas, line, lineBottom - lineSpacing);
+            drawText(canvas, lineText, line.bottom - lineSpacing);
 
             // Stop drawing if we're off the bottom of the view
-            if (lineBottom > getHeight()) break;
+            if (line.bottom > getHeight()) break;
 
-            lastBottom = lineBottom;
+            lastBottom = line.bottom;
         }
     }
 
-    private boolean isTouched(int lineTop, int lineBottom) {
-        return touchY <= lineBottom && touchY >= lineTop;
-    }
-
-    private void highlightTouchedLine(Canvas canvas, int lineTop, int lineBottom) {
+    private void drawHighlightLine(Canvas canvas, int lineTop, int lineBottom) {
         mPaint.setColor(Color.DKGRAY);
         canvas.drawRect(0, lineTop, getWidth(), lineBottom, mPaint);
     }
 
-    private void drawCursor(Canvas canvas, String line, int lineTop, int lineBottom) {
+    private void drawCursor(Canvas canvas, int touchX, String lineText, int lineTop, int lineBottom) {
         int overallWidth = 0;
         boolean isCharTouched = false;
 
-        for (int i = 0; i < line.length(); i++) {
-            float charWidth = mPaint.measureText(line, i, i + 1);
+        for (int i = 0; i < lineText.length(); i++) {
+            float charWidth = mPaint.measureText(lineText, i, i + 1);
             overallWidth += (int) charWidth;
 
             if (touchX <= overallWidth) {
@@ -117,7 +119,7 @@ public class Editor extends View {
             }
         }
 
-        if (!isCharTouched) {
+        if (! isCharTouched) {
             cursorRect.left = overallWidth;
             cursorRect.right = overallWidth + (int) mPaint.measureText("a");
         }
