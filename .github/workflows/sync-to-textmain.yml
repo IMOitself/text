@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main  # or whatever your default branch is named
-    paths:
-      - 'app/src/main/**'  # Only trigger on changes in this directory
 
 jobs:
   sync:
