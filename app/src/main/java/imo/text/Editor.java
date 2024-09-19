@@ -90,13 +90,6 @@ public class Editor extends View {
 
             boolean isMoveCursorMode = moveCursorX != 0;
 
-            // Check if line is touched
-            if (line.isTouched(touchY) && ! isMoveCursorMode) {
-                currCursorLine = lineIndex;
-                drawCursorLine(canvas, line.top, line.bottom);
-                drawCursorOnTouch(canvas, touchX, lineText, cursorRect);
-            }
-
             if(isMoveCursorMode && lineIndex == currCursorLine) {
                 currCursorCharIndex += moveCursorX;
 
@@ -107,6 +100,12 @@ public class Editor extends View {
                 drawCursorLine(canvas, line.top, line.bottom);
                 moveCursorX(canvas, currCursorCharIndex, lineText, cursorRect);
                 moveCursorX = 0;
+            }
+            // Check if line is touched
+            else if (line.isTouched(touchY)) {
+                currCursorLine = lineIndex;
+                drawCursorLine(canvas, line.top, line.bottom);
+                drawCursorOnTouch(canvas, touchX, lineText, cursorRect);
             }
 
             // Draw text

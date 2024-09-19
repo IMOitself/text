@@ -10,8 +10,6 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Keyboard {
     static Activity mActivity;
@@ -98,19 +96,17 @@ public class Keyboard {
         keyCornerRadius = normalKeyWidth / 8;
 
         // Configure keys
-        List<TextView> allKeyViews = new ArrayList<>();
-
         for (int id : numberSizeKeys)
-            allKeyViews.add(configKey(id, normalKeyWidth, numberKeyHeight, R.color.key_primary));
+            configKey(id, normalKeyWidth, numberKeyHeight, R.color.key_primary);
 
         for (int id : normalSizeKeys)
-            allKeyViews.add(configKey(id, normalKeyWidth, normalKeyHeight, R.color.key_primary));
+            configKey(id, normalKeyWidth, normalKeyHeight, R.color.key_primary);
 
         for (int id : wideSizeKeys)
-            allKeyViews.add(configKey(id, wideKeyWidth, normalKeyHeight, R.color.key_secondary));
+            configKey(id, wideKeyWidth, normalKeyHeight, R.color.key_secondary);
 
-        allKeyViews.add(configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary));
-        allKeyViews.add(configKey(R.id.key_go, wideKeyWidth, normalKeyHeight, R.color.key_tertiary));
+        configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary);
+        configKey(R.id.key_go, wideKeyWidth, normalKeyHeight, R.color.key_tertiary);
 
         TextView keyH = mActivity.findViewById(R.id.key_H);
         TextView keyL = mActivity.findViewById(R.id.key_L);
@@ -129,7 +125,7 @@ public class Keyboard {
         });
     }
 
-    private static TextView configKey(int viewId, int width, int height, int colorId){
+    private static void configKey(int viewId, int width, int height, int colorId){
         TextView view = mActivity.findViewById(viewId);
         ViewGroup.LayoutParams params = view.getLayoutParams();
         params.width = width;
@@ -154,7 +150,6 @@ public class Keyboard {
         view.setTextSize(keyTextSize);
         
         view.setBackground(new BitmapDrawable(mActivity.getResources(), bitmap));
-        return view;
     }
 
     public static float calculateTextSizeToFitRect(Paint paint, RectF bounds) {
