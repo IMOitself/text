@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class Keyboard {
     static Activity mActivity;
+    static Editor mEditor;
     static int keyPaddingW, keyPaddingH;
     static int keyCornerRadius;
     static float keyTextSize = -1;
@@ -109,6 +111,22 @@ public class Keyboard {
 
         allKeyViews.add(configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary));
         allKeyViews.add(configKey(R.id.key_go, wideKeyWidth, normalKeyHeight, R.color.key_tertiary));
+
+        TextView keyH = mActivity.findViewById(R.id.key_H);
+        TextView keyL = mActivity.findViewById(R.id.key_L);
+
+        keyH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mEditor.setMoveCursorX(-1);
+            }
+        });
+        keyL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mEditor.setMoveCursorX(1);
+            }
+        });
     }
 
     private static TextView configKey(int viewId, int width, int height, int colorId){
