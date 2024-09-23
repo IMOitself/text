@@ -11,7 +11,7 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Editor editor = findViewById(R.id.editor);
+        final Editor editor = findViewById(R.id.editor);
         StringBuilder sb = new StringBuilder();
         sb.append("america ya!");
         for(int i = 0; i < 99; i++){

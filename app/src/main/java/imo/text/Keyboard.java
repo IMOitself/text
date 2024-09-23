@@ -114,13 +114,13 @@ public class Keyboard {
         keyH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mEditor.setMoveCursorX(-1);
+                mEditor.moveCursorX(-1);
             }
         });
         keyL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mEditor.setMoveCursorX(1);
+                mEditor.moveCursorX(1);
             }
         });
     }

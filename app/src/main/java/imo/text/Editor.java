@@ -5,29 +5,27 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Editor extends View {
     List<Line> Lines = new ArrayList<>();
+    int currLinePosition = 0;
+    int currCharPosition = 0;
     
     Paint mPaint;
     Rect textBounds;
-    Rect cursorRect;
+    RectF charCursor;
     
     int touchX = 0;
     int touchY = 0;
     
     int lineHeight = -1;
     int lineSpacing = 0;
-
-    int currCursorCharIndex;
-    int currCursorLine;
-
 
     public Editor(Context context) {
         super(context);
@@ -47,7 +45,7 @@ public class Editor extends View {
     void init(){
         mPaint = new Paint();
         textBounds = new Rect();
-        cursorRect = new Rect();
+        charCursor = new RectF();
         
         mPaint.setTextSize(50f);
         mPaint.setColor(Color.WHITE);
@@ -68,95 +66,77 @@ public class Editor extends View {
 
         int lastBottom = 0;
         int lineIndex = 0;
+        int charIndex = 0;
         
         for (Line line : Lines) {
             String lineText = line.text;
-            
-            // Measure text bounds
-            mPaint.getTextBounds(lineText, 0, lineText.length(), textBounds);
+            int cumulativeWidth = 0;
 
-            // Initialize line height and spacing (only once)
+            // measure text bounds
+            mPaint.getTextBounds(lineText, 0, lineText.length(), textBounds);
+            
+            // initialize line height and spacing (only once)
             if (lineHeight == -1) {
                 lineHeight = textBounds.height();
                 lineSpacing = lineHeight / 2;
             }
 
-            // Calculate line position
             line.top = lastBottom;
             line.bottom = line.top + lineHeight + lineSpacing;
-
-            cursorRect.top = line.top;
-            cursorRect.bottom = line.bottom;
-
-            boolean isMoveCursorMode = moveCursorX != 0;
-
-            if(isMoveCursorMode && lineIndex == currCursorLine) {
-                currCursorCharIndex += moveCursorX;
-
-                boolean overLeft = currCursorCharIndex < 0;
-                boolean overRight = currCursorCharIndex > lineText.length() - 1;
-                if(overLeft || overRight) currCursorCharIndex -= moveCursorX;
-
-                drawCursorLine(canvas, line.top, line.bottom);
-                moveCursorX(canvas, currCursorCharIndex, lineText, cursorRect);
-                moveCursorX = 0;
+            
+            // finish early
+            if(lineText.isEmpty()) {
+                lastBottom = line.bottom;
+                continue;
             }
-            // Check if line is touched
-            else if (line.isTouched(touchY)) {
-                currCursorLine = lineIndex;
-                drawCursorLine(canvas, line.top, line.bottom);
-                drawCursorOnTouch(canvas, touchX, lineText, cursorRect);
+
+            // get each char bounds
+            for (int i = 0; i < lineText.length(); i++) {
+                float charWidth = mPaint.measureText(lineText, i, i + 1);
+                cumulativeWidth += (int) charWidth;
+                
+                RectF charRect = new RectF();
+                charRect.top = line.top;
+                charRect.bottom = line.bottom;
+                charRect.left = cumulativeWidth - charWidth;
+                charRect.right = cumulativeWidth;
+                line.charRects.add(charRect);
+            }
+            
+            // highlight the line and char
+            if(line.isTouched(touchY)){
+                mPaint.setColor(Color.DKGRAY);
+                canvas.drawRect(0, line.top, getWidth(), line.bottom, mPaint);
+                
+                boolean hasTouchChar = false;
+                
+                for(RectF charRect : line.charRects){
+                    if(charRect.contains(touchX, touchY)){
+                        hasTouchChar = true;
+                        charCursor = charRect;
+                        break;
+                    }
+                    charIndex++;
+                }
+                // draw cursor at the last char
+                if(! hasTouchChar) charCursor = line.charRects.get(line.charRects.size() - 1);
+                
+                mPaint.setColor(0xFF888888);
+                canvas.drawRect(charCursor, mPaint);
+                
+                currLinePosition = lineIndex;
+                currCharPosition = charIndex;
+                lineIndex++;
             }
 
             // Draw text
-            drawText(canvas, lineText, line.bottom - lineSpacing);
+            mPaint.setColor(Color.WHITE);
+            canvas.drawText(lineText, 0, line.bottom - lineSpacing, mPaint);
 
             // Stop drawing if we're off the bottom of the view
             if (line.bottom > getHeight()) break;
-
             lastBottom = line.bottom;
-            lineIndex++;
         }
-    }
-
-    private void drawCursorLine(Canvas canvas, int lineTop, int lineBottom) {
-        mPaint.setColor(Color.DKGRAY);
-        canvas.drawRect(0, lineTop, getWidth(), lineBottom, mPaint);
-    }
-
-    private void drawCursorOnTouch(Canvas canvas, int touchX, String lineText, Rect cursorRect) {
-        int overallWidth = 0;
-        boolean isCharTouched = false;
-
-        for (int i = 0; i < lineText.length(); i++) {
-            float charWidth = mPaint.measureText(lineText, i, i + 1);
-            overallWidth += (int) charWidth;
-
-            if (touchX <= overallWidth) {
-                cursorRect.left = overallWidth - (int) charWidth;
-                cursorRect.right = overallWidth;
-                currCursorCharIndex = i;
-                isCharTouched = true;
-                break;
-            }
-        }
-
-        if (! isCharTouched) {
-            int lastChar = lineText.length() - 1;
-            float lastCharWidth = mPaint.measureText(lineText, lastChar, lastChar + 1);
-            float charsWidthBefore = mPaint.measureText(lineText, 0, lastChar);
-            cursorRect.left = (int) charsWidthBefore;
-            cursorRect.right = (int) (charsWidthBefore + lastCharWidth);
-            currCursorCharIndex = lineText.length() - 1;
-        }
-
-        mPaint.setColor(0xFF888888);
-        canvas.drawRect(cursorRect, mPaint);
-    }
-
-    private void drawText(Canvas canvas, String line, int y) {
-        mPaint.setColor(Color.WHITE);
-        canvas.drawText(line, 0, y, mPaint);
     }
 
     @Override
@@ -169,26 +149,8 @@ public class Editor extends View {
         }
         return super.onTouchEvent(event);
     }
-
-
-    //
-    // VIM MACROS
-    //
-    int moveCursorX = 0;
-
-    public void setMoveCursorX(int amount){
-        moveCursorX = amount;
-        invalidate(); // will call onDraw() and moveCursorX()
-    }
-
-    private void moveCursorX(Canvas canvas, int charIndex, String lineText, Rect cursorRect) {
-        float charsWidthBefore = mPaint.measureText(lineText, 0, charIndex);
-        float charWidth = mPaint.measureText(lineText, charIndex, charIndex + 1);
-
-        cursorRect.left = (int) charsWidthBefore;
-        cursorRect.right = (int) (charsWidthBefore + charWidth);
-
-        mPaint.setColor(0xFF888888);
-        canvas.drawRect(cursorRect, mPaint);
+    
+    void moveCursorX(int amount){
+        
     }
 }
