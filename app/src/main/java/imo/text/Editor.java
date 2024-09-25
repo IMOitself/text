@@ -141,6 +141,16 @@ public class Editor extends View {
         invalidate();
     }
     
+    String moveCursorY(int amount){
+        int newCharPosition = amount + currLinePosition;
+        
+        if(newCharPosition < 0) return "top";
+        
+        currLinePosition = newCharPosition;
+        invalidate();
+        return currLinePosition + "";
+    }
+    
     
     
     

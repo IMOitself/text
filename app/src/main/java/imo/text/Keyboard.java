@@ -111,6 +111,8 @@ public class Keyboard {
         TextView keyH = mActivity.findViewById(R.id.key_H);
         TextView keyL = mActivity.findViewById(R.id.key_L);
         TextView key0 = mActivity.findViewById(R.id.key_0);
+        TextView keyJ = mActivity.findViewById(R.id.key_J);
+        TextView keyK = mActivity.findViewById(R.id.key_K);
 
         keyH.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +130,20 @@ public class Keyboard {
                 @Override
                 public void onClick(View view) {
                     mEditor.moveCursorToFirstChar();
+                }
+            });
+        keyJ.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //mEditor.moveCursorY(1);
+                    mActivity.setTitle(mEditor.moveCursorY(1));
+                }
+            });
+        keyK.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //mEditor.moveCursorY(-1);
+                    mActivity.setTitle(mEditor.moveCursorY(-1));
                 }
             });
     }
