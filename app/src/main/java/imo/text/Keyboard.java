@@ -10,6 +10,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.os.Handler;
+import android.view.MotionEvent;
 
 public class Keyboard {
     static Activity mActivity;
@@ -114,36 +116,41 @@ public class Keyboard {
         TextView keyJ = mActivity.findViewById(R.id.key_J);
         TextView keyK = mActivity.findViewById(R.id.key_K);
 
-        keyH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mEditor.moveCursorX(-1);
-            }
-        });
-        keyL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mEditor.moveCursorX(1);
-            }
-        });
-        key0.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mEditor.moveCursorToFirstChar();
-                }
-            });
-        keyJ.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mEditor.moveCursorY(1);
-                }
-            });
-        keyK.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mEditor.moveCursorY(-1);
-                }
-            });
+        keyH.setOnTouchListener(
+            continousClick(new Runnable() {
+                    @Override
+                    public void run() {
+                        mEditor.moveCursorX(-1);
+                    }
+                }));
+        keyL.setOnTouchListener(
+            continousClick(new Runnable() {
+                    @Override
+                    public void run() {
+                        mEditor.moveCursorX(1);
+                    }
+                }));
+        key0.setOnTouchListener(
+            continousClick(new Runnable() {
+                    @Override
+                    public void run() {
+                        mEditor.moveCursorToFirstChar();
+                    }
+                }));
+        keyJ.setOnTouchListener(
+            continousClick(new Runnable() {
+                    @Override
+                    public void run() {
+                        mEditor.moveCursorY(1);
+                    }
+                }));
+        keyK.setOnTouchListener(
+            continousClick(new Runnable() {
+                    @Override
+                    public void run() {
+                        mEditor.moveCursorY(-1);
+                    }
+                }));
     }
 
     private static void configKey(int viewId, int width, int height, int colorId){
@@ -191,5 +198,36 @@ public class Keyboard {
         }
 
         return size;
+    }
+    
+    public static View.OnTouchListener continousClick(final Runnable performAction) {
+        return new View.OnTouchListener() {
+            private Handler handler = new Handler();
+            private static final int INITIAL_DELAY = 500; // milliseconds
+            private static final int REPEAT_DELAY = 50; // milliseconds
+
+            private Runnable actionRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    performAction.run();
+                    handler.postDelayed(this, REPEAT_DELAY);
+                }
+            };
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        performAction.run();
+                        handler.postDelayed(actionRunnable, INITIAL_DELAY);
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        handler.removeCallbacks(actionRunnable);
+                        return true;
+                }
+                return false;
+            }
+        };
     }
 }

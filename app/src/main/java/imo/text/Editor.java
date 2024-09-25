@@ -68,6 +68,10 @@ public class Editor extends View {
            initLines(Lines);
         
         Line currLine = Lines.get(currLinePosition);
+        
+        int lastCharPosition = currLine.charRects.size() - 1;
+        if(currCharPosition > lastCharPosition) currCharPosition = lastCharPosition;
+        
         RectF currCharRect = currLine.charRects.get(currCharPosition);
         
         charCursor = currCharRect;
