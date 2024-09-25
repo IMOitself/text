@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">text</string>
     <!-- slowly gonna introduce characters for vim macros -->
-    <string name="_0"> </string>
+    <string name="_0">0</string>
     <string name="_1"> </string>
     <string name="_2"> </string>
     <string name="_3"> </string>

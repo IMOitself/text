@@ -110,6 +110,7 @@ public class Keyboard {
 
         TextView keyH = mActivity.findViewById(R.id.key_H);
         TextView keyL = mActivity.findViewById(R.id.key_L);
+        TextView key0 = mActivity.findViewById(R.id.key_0);
 
         keyH.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +124,12 @@ public class Keyboard {
                 mEditor.moveCursorX(1);
             }
         });
+        key0.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mEditor.moveCursorToFirstChar();
+                }
+            });
     }
 
     private static void configKey(int viewId, int width, int height, int colorId){

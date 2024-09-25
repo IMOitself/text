@@ -136,6 +136,11 @@ public class Editor extends View {
         invalidate();
     }
     
+    void moveCursorToFirstChar(){
+        currCharPosition = 0;
+        invalidate();
+    }
+    
     
     
     
