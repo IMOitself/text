@@ -135,15 +135,13 @@ public class Keyboard {
         keyJ.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //mEditor.moveCursorY(1);
-                    mActivity.setTitle(mEditor.moveCursorY(1));
+                    mEditor.moveCursorY(1);
                 }
             });
         keyK.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //mEditor.moveCursorY(-1);
-                    mActivity.setTitle(mEditor.moveCursorY(-1));
+                    mEditor.moveCursorY(-1);
                 }
             });
     }
