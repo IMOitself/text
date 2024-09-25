@@ -21,9 +21,6 @@ public class Editor extends View {
     Rect textBounds;
     RectF charCursor;
     
-    int touchX = 0;
-    int touchY = 0;
-    
     int lineHeight = -1;
     int lineSpacing = 0;
 
@@ -61,20 +58,99 @@ public class Editor extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        long initialTimeMillis = System.currentTimeMillis(); // DEBUGGING
 
         if (Lines.isEmpty()) return;
 
-        int lastBottom = 0;
-        int lineIndex = 0;
-        int charIndex = 0;
+        Line dummyLine = Lines.get(0);
+        if(dummyLine.top == null ||
+           dummyLine.bottom == null)
+           initLines(Lines);
         
-        for (Line line : Lines) {
-            String lineText = line.text;
+        Line currLine = Lines.get(currLinePosition);
+        RectF currCharRect = currLine.charRects.get(currCharPosition);
+        
+        charCursor = currCharRect;
+        
+        mPaint.setColor(Color.DKGRAY);
+        canvas.drawRect(0, currLine.top, getWidth(), currLine.bottom, mPaint);
+        
+        mPaint.setColor(0xFF888888);
+        canvas.drawRect(charCursor, mPaint);
+        
+        drawTexts(canvas, Lines, lineSpacing);
+        
+        // DEBUGGING
+        long currTimeMillis = System.currentTimeMillis();
+        long drawnTimeMillis = currTimeMillis - initialTimeMillis;
+        canvas.drawText("drawn: " + drawnTimeMillis + " ms", canvas.getWidth() / 3, canvas.getHeight() / 2, mPaint);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            int touchX = (int) event.getX();
+            int touchY = (int) event.getY();
+            
+            int lineIndex = -1;
+            int charIndex = -1;
+            
+            // find touched line
+            for(Line line : Lines){
+                lineIndex++;
+                if(! line.isTouched(touchY)) continue;
+                currLinePosition = lineIndex;
+                
+                // find touched char
+                boolean hasTouchAnyChar = false;
+                for(RectF charRect : line.charRects){
+                    charIndex++;
+                    if(! charRect.contains(touchX, touchY)) continue;
+                    currCharPosition = charIndex;
+                    hasTouchAnyChar = true;
+                    break;
+                }
+                
+                // if didnt touched any, just select the last char
+                if(! hasTouchAnyChar){
+                    int lastCharPosition = line.charRects.size() - 1;
+                    currCharPosition = lastCharPosition;
+                } 
+                break;
+            }
+            invalidate(); // will call onDraw()
+            return true;
+        }
+        return super.onTouchEvent(event);
+    }
+    
+    
+    void moveCursorX(int amount){
+        Line currLine = Lines.get(currLinePosition);
+        int newCharPosition = amount + currCharPosition;
+        
+        if(newCharPosition < 0) return;
+        if(newCharPosition >= currLine.charRects.size()) return;
+        
+        currCharPosition = newCharPosition;
+        invalidate();
+    }
+    
+    
+    
+    
+    
+    
+    void initLines(List<Line> Lines){
+        // populate each line's variables except the 'text'
+        // cos its already been set on setText()
+        int lastBottom = 0;
+        for(Line line : Lines){
             int cumulativeWidth = 0;
 
-            // measure text bounds
-            mPaint.getTextBounds(lineText, 0, lineText.length(), textBounds);
-            
+            // populate text bounds
+            mPaint.getTextBounds(line.text, 0, line.text.length(), textBounds);
+
             // initialize line height and spacing (only once)
             if (lineHeight == -1) {
                 lineHeight = textBounds.height();
@@ -83,18 +159,13 @@ public class Editor extends View {
 
             line.top = lastBottom;
             line.bottom = line.top + lineHeight + lineSpacing;
-            
-            // finish early
-            if(lineText.isEmpty()) {
-                lastBottom = line.bottom;
-                continue;
-            }
+            lastBottom = line.bottom;
 
-            // get each char bounds
-            for (int i = 0; i < lineText.length(); i++) {
-                float charWidth = mPaint.measureText(lineText, i, i + 1);
+            // get each char bounds as RectF
+            for (int i = 0; i < line.text.length(); i++) {
+                float charWidth = mPaint.measureText(line.text, i, i + 1);
                 cumulativeWidth += (int) charWidth;
-                
+
                 RectF charRect = new RectF();
                 charRect.top = line.top;
                 charRect.bottom = line.bottom;
@@ -102,55 +173,16 @@ public class Editor extends View {
                 charRect.right = cumulativeWidth;
                 line.charRects.add(charRect);
             }
-            
-            // highlight the line and char
-            if(line.isTouched(touchY)){
-                mPaint.setColor(Color.DKGRAY);
-                canvas.drawRect(0, line.top, getWidth(), line.bottom, mPaint);
-                
-                boolean hasTouchChar = false;
-                
-                for(RectF charRect : line.charRects){
-                    if(charRect.contains(touchX, touchY)){
-                        hasTouchChar = true;
-                        charCursor = charRect;
-                        break;
-                    }
-                    charIndex++;
-                }
-                // draw cursor at the last char
-                if(! hasTouchChar) charCursor = line.charRects.get(line.charRects.size() - 1);
-                
-                mPaint.setColor(0xFF888888);
-                canvas.drawRect(charCursor, mPaint);
-                
-                currLinePosition = lineIndex;
-                currCharPosition = charIndex;
-                lineIndex++;
-            }
-
-            // Draw text
+        }
+    }
+    
+    void drawTexts(Canvas canvas, List<Line> Lines, int lineSpacing){
+        for(Line line : Lines){
             mPaint.setColor(Color.WHITE);
-            canvas.drawText(lineText, 0, line.bottom - lineSpacing, mPaint);
+            canvas.drawText(line.text, 0, line.bottom - lineSpacing, mPaint);
 
             // Stop drawing if we're off the bottom of the view
             if (line.bottom > getHeight()) break;
-            lastBottom = line.bottom;
         }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            touchX = (int) event.getX();
-            touchY = (int) event.getY();
-            invalidate(); // will call onDraw()
-            return true;
-        }
-        return super.onTouchEvent(event);
-    }
-    
-    void moveCursorX(int amount){
-        
     }
 }

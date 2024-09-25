@@ -7,8 +7,8 @@ import java.util.List;
 public class Line {
     List<RectF> charRects = new ArrayList<>();
     String text;
-    int bottom;
-    int top;
+    Integer bottom;
+    Integer top;
 
     Line(String text){
         this.text = text;
