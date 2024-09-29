@@ -108,13 +108,17 @@ public class Keyboard {
             configKey(id, wideKeyWidth, normalKeyHeight, R.color.key_secondary);
 
         configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary);
-        configKey(R.id.key_go, wideKeyWidth, normalKeyHeight, R.color.key_tertiary);
+        configKey(R.id.key_enter, wideKeyWidth, normalKeyHeight, R.color.key_tertiary);
 
         TextView keyH = mActivity.findViewById(R.id.key_H);
         TextView keyL = mActivity.findViewById(R.id.key_L);
         TextView key0 = mActivity.findViewById(R.id.key_0);
         TextView keyJ = mActivity.findViewById(R.id.key_J);
         TextView keyK = mActivity.findViewById(R.id.key_K);
+        TextView keyW = mActivity.findViewById(R.id.key_W);
+        TextView keySpace = mActivity.findViewById(R.id.key_space);
+        TextView keyBackspace = mActivity.findViewById(R.id.key_backspace);
+        TextView keyEnter = mActivity.findViewById(R.id.key_enter);
 
         keyH.setOnTouchListener(
             continousClick(new Runnable() {
@@ -144,11 +148,39 @@ public class Keyboard {
                         mEditor.moveCursorY(1);
                     }
                 }));
+        keyW.setOnTouchListener(
+            continousClick(new Runnable() {
+                    @Override
+                    public void run() {
+                        mEditor.moveCursorToNextWordStart();
+                    }
+                }));
         keyK.setOnTouchListener(
             continousClick(new Runnable() {
                     @Override
                     public void run() {
                         mEditor.moveCursorY(-1);
+                    }
+                }));
+        keySpace.setOnTouchListener(
+            continousClick(new Runnable(){
+                    @Override
+                    public void run(){
+                        mEditor.moveCursorX(1);
+                    }
+                }));
+        keyBackspace.setOnTouchListener(
+            continousClick(new Runnable(){
+                    @Override
+                    public void run(){
+                        mEditor.moveCursorX(-1);
+                    }
+                }));
+        keyEnter.setOnTouchListener(
+            continousClick(new Runnable(){
+                    @Override
+                    public void run(){
+                        mEditor.moveCursorY(1);
                     }
                 }));
     }

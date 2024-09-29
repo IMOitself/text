@@ -11,6 +11,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
+import java.util.Arrays;
 
 public class Editor extends View {
     List<Line> Lines = new ArrayList<>();
@@ -58,8 +60,6 @@ public class Editor extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        long initialTimeMillis = System.currentTimeMillis(); // DEBUGGING
-
         if (Lines.isEmpty()) return;
 
         Line dummyLine = Lines.get(0);
@@ -68,10 +68,6 @@ public class Editor extends View {
            initLines(Lines);
         
         Line currLine = Lines.get(currLinePosition);
-        
-        int lastCharPosition = currLine.charRects.size() - 1;
-        if(currCharPosition > lastCharPosition) currCharPosition = lastCharPosition;
-        
         RectF currCharRect = currLine.charRects.get(currCharPosition);
         
         charCursor = currCharRect;
@@ -83,11 +79,6 @@ public class Editor extends View {
         canvas.drawRect(charCursor, mPaint);
         
         drawTexts(canvas, Lines, lineSpacing);
-        
-        // DEBUGGING
-        long currTimeMillis = System.currentTimeMillis();
-        long drawnTimeMillis = currTimeMillis - initialTimeMillis;
-        canvas.drawText("drawn: " + drawnTimeMillis + " ms", canvas.getWidth() / 3, canvas.getHeight() / 2, mPaint);
     }
 
     @Override
@@ -115,14 +106,12 @@ public class Editor extends View {
                     break;
                 }
                 
-                // if didnt touched any, just select the last char
-                if(! hasTouchAnyChar){
-                    int lastCharPosition = line.charRects.size() - 1;
-                    currCharPosition = lastCharPosition;
-                } 
+                // if didn't touched any, just select the last char
+                if(! hasTouchAnyChar) currCharPosition = charIndex;
+                
                 break;
             }
-            invalidate(); // will call onDraw()
+            invalidate();
             return true;
         }
         return super.onTouchEvent(event);
@@ -130,11 +119,10 @@ public class Editor extends View {
     
     
     void moveCursorX(int amount){
-        Line currLine = Lines.get(currLinePosition);
         int newCharPosition = amount + currCharPosition;
         
         if(newCharPosition < 0) return;
-        if(newCharPosition >= currLine.charRects.size()) return;
+        if(newCharPosition >= Lines.get(currLinePosition).charRects.size()) return;
         
         currCharPosition = newCharPosition;
         invalidate();
@@ -145,12 +133,38 @@ public class Editor extends View {
         invalidate();
     }
     
+    void moveCursorToNextWordStart(){
+        Line currLine = Lines.get(currLinePosition);
+        char[] charArray = currLine.text.toCharArray();
+        int lastCharIndex = currLine.charRects.size() - 1;
+        int nextSpaceIndex = lastCharIndex;
+        
+        for (int i = currCharPosition; i < charArray.length; i++) {
+            char Char = charArray[i];
+            if(Char == ' '){
+                nextSpaceIndex = i;
+                break;
+            } 
+        }
+        // start of the next word is after the space
+        int startOfWordIndex = nextSpaceIndex + 1;
+        
+        // if over the char count, just return the last index
+        currCharPosition = startOfWordIndex > lastCharIndex ? lastCharIndex : startOfWordIndex;
+        invalidate();
+    }
+    
     void moveCursorY(int amount){
-        int newCharPosition = amount + currLinePosition;
+        int newLinePosition = amount + currLinePosition;
         
-        if(newCharPosition < 0) return;
+        if(newLinePosition < 0) return;
         
-        currLinePosition = newCharPosition;
+        currLinePosition = newLinePosition;
+        
+        // prevent overshoot if the previous line is longer than the new
+        Line line = Lines.get(newLinePosition);
+        if(currCharPosition >= line.charRects.size())
+            currCharPosition = line.charRects.size() - 1;
         invalidate();
     }
     
@@ -177,7 +191,7 @@ public class Editor extends View {
 
             line.top = lastBottom;
             line.bottom = line.top + lineHeight + lineSpacing;
-            lastBottom = line.bottom;
+            lastBottom = line.bottom; // NOTE: don't use lastBottom below, its already changed
 
             // get each char bounds as RectF
             for (int i = 0; i < line.text.length(); i++) {

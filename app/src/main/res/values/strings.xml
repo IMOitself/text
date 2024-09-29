@@ -34,14 +34,14 @@
     <string name="t"> </string>
     <string name="u"> </string>
     <string name="v"> </string>
-    <string name="w"> </string>
+    <string name="w">W</string>
     <string name="x"> </string>
     <string name="y"> </string>
     <string name="z"> </string>
     <string name="comma"> </string>
-    <string name="backspace"> </string>
+    <string name="backspace">back</string>
     <string name="period"> </string>
     <string name="ctrl"> </string>
     <string name="shift"> </string>
-    <string name="go"> </string>
+    <string name="enter">enter</string>
 </resources>

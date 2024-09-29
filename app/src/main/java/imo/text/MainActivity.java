@@ -13,7 +13,7 @@ public class MainActivity extends Activity{
 
         final Editor editor = findViewById(R.id.editor);
         StringBuilder sb = new StringBuilder();
-        sb.append("america ya!");
+        sb.append("america ya! :3");
         for(int i = 0; i < 99; i++){
             sb.append("\nhallo:D");
         }

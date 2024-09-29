@@ -354,8 +354,8 @@
                  android:layout_height="50dp"
                  android:layout_width="37dp"
                  android:gravity="center"
-                 android:id="@+id/key_go"
-                 android:text="@string/go" />
+                 android:id="@+id/key_enter"
+                 android:text="@string/enter" />
 
         </LinearLayout>
 
