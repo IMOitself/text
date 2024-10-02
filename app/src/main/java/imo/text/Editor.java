@@ -115,7 +115,6 @@ public class Editor extends View {
         return true;
     }
     
-    
     void moveCursorX(int amount){
         int newCharPosition = amount + currCharPosition;
         
@@ -134,7 +133,7 @@ public class Editor extends View {
     void moveCursorToNextWordStart(){
         Line currLine = Lines.get(currLinePosition);
         int nextWordIndex = currWordIndex + 1;
-        if(nextWordIndex > currLine.wordCharPositions.size() - 1) return;
+        if(nextWordIndex > currLine.wordCharPositions.size() - 1) return; // over last word
 
         List<Integer> nextWord = currLine.wordCharPositions.get(nextWordIndex);
         currCharPosition = nextWord.get(0);
@@ -154,13 +153,36 @@ public class Editor extends View {
             return;
         }
 
-        // only go to previous word if the cursor is at first char
+        // only go to previous word if the cursor is at first char of current word
         int prevWordIndex = currWordIndex - 1;
         if(prevWordIndex < 0) return;
 
         List<Integer> prevWord = currLine.wordCharPositions.get(prevWordIndex);
         currCharPosition = prevWord.get(0);
         currWordIndex -= 1;
+        invalidate();
+    }
+
+    void moveCursorToNextWordEnd(){
+        Line currLine = Lines.get(currLinePosition);
+
+        // if the cursor is still in the current word but not at the last char
+        List<Integer> currWord = currLine.wordCharPositions.get(currWordIndex);
+        int currLastChar = currWord.size() - 1;
+
+        if(currCharPosition < currWord.get(currLastChar)){
+            currCharPosition = currWord.get(currLastChar);
+            invalidate();
+            return;
+        }
+
+        int nextWordIndex = currWordIndex + 1;
+        if(nextWordIndex > currLine.wordCharPositions.size() - 1) return; // over last word
+
+        List<Integer> nextWord = currLine.wordCharPositions.get(nextWordIndex);
+        int nextLastChar = nextWord.size() - 1;
+        currCharPosition = nextWord.get(nextLastChar);
+        currWordIndex += 1;
         invalidate();
     }
 
@@ -221,6 +243,11 @@ public class Editor extends View {
                 charPositions.add(i);
 
                 if(Character.isWhitespace(chars[i]) || i == line.text.length() - 1){
+
+                    // remove the whitespace char in the end of the word
+                    if(Character.isWhitespace(chars[charPositions.get(charPositions.size() - 1)]))
+                        charPositions.remove(charPositions.size() - 1);
+
                     line.wordCharPositions.add(new ArrayList<>(charPositions));
                     charPositions.clear();
                 }

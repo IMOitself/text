@@ -168,6 +168,12 @@ public class Keyboard {
                 mEditor.moveCursorToPrevWordStart();
             }
         }));
+        keyE.setOnTouchListener(continuousClick(new Runnable() {
+            @Override
+            public void run() {
+                mEditor.moveCursorToNextWordEnd();
+            }
+        }));
         key_space.setOnTouchListener(continuousClick(new Runnable(){
                     @Override
                     public void run(){
