@@ -150,18 +150,24 @@ public class Keyboard {
                         mEditor.moveCursorY(1);
                     }
                 }));
-        keyW.setOnTouchListener(continuousClick(new Runnable() {
-                    @Override
-                    public void run() {
-                        mEditor.moveCursorToNextWordStart();
-                    }
-                }));
         keyK.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
                         mEditor.moveCursorY(-1);
                     }
                 }));
+        keyW.setOnTouchListener(continuousClick(new Runnable() {
+            @Override
+            public void run() {
+                mEditor.moveCursorToNextWordStart();
+            }
+        }));
+        keyB.setOnTouchListener(continuousClick(new Runnable() {
+            @Override
+            public void run() {
+                mEditor.moveCursorToPrevWordStart();
+            }
+        }));
         key_space.setOnTouchListener(continuousClick(new Runnable(){
                     @Override
                     public void run(){

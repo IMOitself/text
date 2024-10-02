@@ -16,6 +16,7 @@ public class Editor extends View {
     List<Line> Lines = new ArrayList<>();
     int currLinePosition = 0;
     int currCharPosition = 0;
+    int currWordIndex = 0;
     
     Paint mPaint;
     Rect textBounds;
@@ -132,24 +133,37 @@ public class Editor extends View {
     
     void moveCursorToNextWordStart(){
         Line currLine = Lines.get(currLinePosition);
-        char[] charArray = currLine.text.toCharArray();
-        int lastCharIndex = currLine.charRects.size() - 1;
-        int nextSpaceIndex = lastCharIndex;
-        
-        for (int i = currCharPosition; i < charArray.length; i++) {
-            if(' ' != charArray[i]) continue;
+        int nextWordIndex = currWordIndex + 1;
+        if(nextWordIndex > currLine.wordCharPositions.size() - 1) return;
 
-            nextSpaceIndex = i;
-            break;
-        }
-        // start of the next word is after the space
-        int startOfWordIndex = nextSpaceIndex + 1;
-        
-        // if over the char count, just return the last index
-        currCharPosition = (startOfWordIndex > lastCharIndex) ? lastCharIndex : startOfWordIndex;
+        List<Integer> nextWord = currLine.wordCharPositions.get(nextWordIndex);
+        currCharPosition = nextWord.get(0);
+        currWordIndex += 1;
         invalidate();
     }
-    
+
+    void moveCursorToPrevWordStart(){
+        Line currLine = Lines.get(currLinePosition);
+
+        // if the cursor is still in the current word but not at the first char
+        List<Integer> currWord = currLine.wordCharPositions.get(currWordIndex);
+
+        if(currCharPosition > currWord.get(0)){
+            currCharPosition = currWord.get(0);
+            invalidate();
+            return;
+        }
+
+        // only go to previous word if the cursor is at first char
+        int prevWordIndex = currWordIndex - 1;
+        if(prevWordIndex < 0) return;
+
+        List<Integer> prevWord = currLine.wordCharPositions.get(prevWordIndex);
+        currCharPosition = prevWord.get(0);
+        currWordIndex -= 1;
+        invalidate();
+    }
+
     void moveCursorY(int amount){
         int newLinePosition = amount + currLinePosition;
         
@@ -190,6 +204,9 @@ public class Editor extends View {
             lastBottom = line.bottom; // NOTE: don't use lastBottom below, its already changed
 
             // get each char bounds as RectF
+            char[] chars = line.text.toCharArray();
+            List<Integer> charPositions = new ArrayList<>();
+
             for (int i = 0; i < line.text.length(); i++) {
                 float charWidth = mPaint.measureText(line.text, i, i + 1);
                 cumulativeWidth += (int) charWidth;
@@ -200,10 +217,17 @@ public class Editor extends View {
                 charRect.left = cumulativeWidth - charWidth;
                 charRect.right = cumulativeWidth;
                 line.charRects.add(charRect);
+
+                charPositions.add(i);
+
+                if(Character.isWhitespace(chars[i]) || i == line.text.length() - 1){
+                    line.wordCharPositions.add(new ArrayList<>(charPositions));
+                    charPositions.clear();
+                }
             }
         }
     }
-    
+
     void drawTexts(Canvas canvas, List<Line> Lines, int lineSpacing){
         for(Line line : Lines){
             mPaint.setColor(Color.WHITE);
