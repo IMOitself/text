@@ -23,59 +23,70 @@ public class Keyboard {
     public static void configKeyboard(Activity activity){
         mActivity = activity;
 
-        int[] numberSizeKeys = {
-            // first row
-            R.id.key_1, 
-            R.id.key_2,
-            R.id.key_3,
-            R.id.key_4,
-            R.id.key_5,
-            R.id.key_6,
-            R.id.key_7,
-            R.id.key_8,
-            R.id.key_9,
-            R.id.key_0
+        ViewGroup keyboard = mActivity.findViewById(R.id.keyboard);
+
+        TextView key1 = mActivity.findViewById(R.id.key_1);
+        TextView key2 = mActivity.findViewById(R.id.key_2);
+        TextView key3 = mActivity.findViewById(R.id.key_3);
+        TextView key4 = mActivity.findViewById(R.id.key_4);
+        TextView key5 = mActivity.findViewById(R.id.key_5);
+        TextView key6 = mActivity.findViewById(R.id.key_6);
+        TextView key7 = mActivity.findViewById(R.id.key_7);
+        TextView key8 = mActivity.findViewById(R.id.key_8);
+        TextView key9 = mActivity.findViewById(R.id.key_9);
+        TextView key0 = mActivity.findViewById(R.id.key_0);
+
+        TextView keyQ = mActivity.findViewById(R.id.key_Q);
+        TextView keyW = mActivity.findViewById(R.id.key_W);
+        TextView keyE = mActivity.findViewById(R.id.key_E);
+        TextView keyR = mActivity.findViewById(R.id.key_R);
+        TextView keyT = mActivity.findViewById(R.id.key_T);
+        TextView keyY = mActivity.findViewById(R.id.key_Y);
+        TextView keyU = mActivity.findViewById(R.id.key_U);
+        TextView keyI = mActivity.findViewById(R.id.key_I);
+        TextView keyO = mActivity.findViewById(R.id.key_O);
+        TextView keyP = mActivity.findViewById(R.id.key_P);
+        TextView keyA = mActivity.findViewById(R.id.key_A);
+        TextView keyS = mActivity.findViewById(R.id.key_S);
+        TextView keyD = mActivity.findViewById(R.id.key_D);
+        TextView keyF = mActivity.findViewById(R.id.key_F);
+        TextView keyG = mActivity.findViewById(R.id.key_G);
+        TextView keyH = mActivity.findViewById(R.id.key_H);
+        TextView keyJ = mActivity.findViewById(R.id.key_J);
+        TextView keyK = mActivity.findViewById(R.id.key_K);
+        TextView keyL = mActivity.findViewById(R.id.key_L);
+        TextView keyZ = mActivity.findViewById(R.id.key_Z);
+        TextView keyX = mActivity.findViewById(R.id.key_X);
+        TextView keyC = mActivity.findViewById(R.id.key_C);
+        TextView keyV = mActivity.findViewById(R.id.key_V);
+        TextView keyB = mActivity.findViewById(R.id.key_B);
+        TextView keyN = mActivity.findViewById(R.id.key_N);
+        TextView keyM = mActivity.findViewById(R.id.key_M);
+
+        TextView key_comma = mActivity.findViewById(R.id.key_comma);
+        TextView key_period = mActivity.findViewById(R.id.key_period);
+        TextView key_shift = mActivity.findViewById(R.id.key_shift);
+        TextView key_backspace = mActivity.findViewById(R.id.key_backspace);
+        TextView key_ctrl = mActivity.findViewById(R.id.key_ctrl);
+
+        TextView key_space = mActivity.findViewById(R.id.key_space);
+        TextView key_enter = mActivity.findViewById(R.id.key_enter);
+
+        TextView[] numberSizeKeys = {
+                key1, key2, key3, key4, key5,
+                key6, key7, key8, key9, key0
         };
 
-        int[] normalSizeKeys = {
-            // second row
-            R.id.key_Q,
-            R.id.key_W,
-            R.id.key_E,
-            R.id.key_R,
-            R.id.key_T,
-            R.id.key_Y,
-            R.id.key_U,
-            R.id.key_I,
-            R.id.key_O,
-            R.id.key_P,
-            // third row
-            R.id.key_A,
-            R.id.key_S,
-            R.id.key_D,
-            R.id.key_F,
-            R.id.key_G,
-            R.id.key_H,
-            R.id.key_J,
-            R.id.key_K,
-            R.id.key_L,
-            // fourth row
-            R.id.key_Z,
-            R.id.key_X,
-            R.id.key_C,
-            R.id.key_V,
-            R.id.key_B,
-            R.id.key_N,
-            R.id.key_M,
-            // fifth row
-            R.id.key_comma,
-            R.id.key_period
+        TextView[] normalSizeKeys = {
+                keyQ, keyW, keyE, keyR, keyT, keyY,
+                keyU, keyI, keyO, keyP, keyA, keyS,
+                keyD, keyF, keyG, keyH, keyJ, keyK,
+                keyL, keyZ, keyX, keyC, keyV, keyB,
+                keyN, keyM, key_comma, key_period
         };
 
-        int[] wideSizeKeys = {
-            R.id.key_shift,
-            R.id.key_backspace,
-            R.id.key_ctrl
+        TextView[] wideSizeKeys = {
+                key_shift, key_backspace, key_ctrl
         };
 
         // Get screen dimensions
@@ -98,86 +109,72 @@ public class Keyboard {
         keyCornerRadius = normalKeyWidth / 8;
 
         // Configure keys
-        for (int id : numberSizeKeys)
-            configKey(id, normalKeyWidth, numberKeyHeight, R.color.key_primary);
+        for (TextView textview : numberSizeKeys)
+            configKey(textview, normalKeyWidth, numberKeyHeight, R.color.key_primary);
 
-        for (int id : normalSizeKeys)
-            configKey(id, normalKeyWidth, normalKeyHeight, R.color.key_primary);
+        for (TextView textview : normalSizeKeys)
+            configKey(textview, normalKeyWidth, normalKeyHeight, R.color.key_primary);
 
-        for (int id : wideSizeKeys)
-            configKey(id, wideKeyWidth, normalKeyHeight, R.color.key_secondary);
+        for (TextView textview  : wideSizeKeys)
+            configKey(textview, wideKeyWidth, normalKeyHeight, R.color.key_secondary);
 
-        configKey(R.id.key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary);
-        configKey(R.id.key_enter, wideKeyWidth, normalKeyHeight, R.color.key_tertiary);
+        configKey(key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary);
+        configKey(key_enter, wideKeyWidth, normalKeyHeight, R.color.key_tertiary);
 
-        TextView keyH = mActivity.findViewById(R.id.key_H);
-        TextView keyL = mActivity.findViewById(R.id.key_L);
-        TextView key0 = mActivity.findViewById(R.id.key_0);
-        TextView keyJ = mActivity.findViewById(R.id.key_J);
-        TextView keyK = mActivity.findViewById(R.id.key_K);
-        TextView keyW = mActivity.findViewById(R.id.key_W);
-        TextView keySpace = mActivity.findViewById(R.id.key_space);
-        TextView keyBackspace = mActivity.findViewById(R.id.key_backspace);
-        TextView keyEnter = mActivity.findViewById(R.id.key_enter);
+        // disable clicking through the keyboard
+        keyboard.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {}
+        });
 
-        keyH.setOnTouchListener(
-            continousClick(new Runnable() {
+        keyH.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
                         mEditor.moveCursorX(-1);
                     }
                 }));
-        keyL.setOnTouchListener(
-            continousClick(new Runnable() {
+        keyL.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
                         mEditor.moveCursorX(1);
                     }
                 }));
-        key0.setOnTouchListener(
-            continousClick(new Runnable() {
+        key0.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
                         mEditor.moveCursorToFirstChar();
                     }
                 }));
-        keyJ.setOnTouchListener(
-            continousClick(new Runnable() {
+        keyJ.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
                         mEditor.moveCursorY(1);
                     }
                 }));
-        keyW.setOnTouchListener(
-            continousClick(new Runnable() {
+        keyW.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
                         mEditor.moveCursorToNextWordStart();
                     }
                 }));
-        keyK.setOnTouchListener(
-            continousClick(new Runnable() {
+        keyK.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
                         mEditor.moveCursorY(-1);
                     }
                 }));
-        keySpace.setOnTouchListener(
-            continousClick(new Runnable(){
+        key_space.setOnTouchListener(continuousClick(new Runnable(){
                     @Override
                     public void run(){
                         mEditor.moveCursorX(1);
                     }
                 }));
-        keyBackspace.setOnTouchListener(
-            continousClick(new Runnable(){
+        key_backspace.setOnTouchListener(continuousClick(new Runnable(){
                     @Override
                     public void run(){
                         mEditor.moveCursorX(-1);
                     }
                 }));
-        keyEnter.setOnTouchListener(
-            continousClick(new Runnable(){
+        key_enter.setOnTouchListener(continuousClick(new Runnable(){
                     @Override
                     public void run(){
                         mEditor.moveCursorY(1);
@@ -185,8 +182,7 @@ public class Keyboard {
                 }));
     }
 
-    private static void configKey(int viewId, int width, int height, int colorId){
-        TextView view = mActivity.findViewById(viewId);
+    private static void configKey(TextView view, int width, int height, int colorId){
         ViewGroup.LayoutParams params = view.getLayoutParams();
         params.width = width;
         params.height = height;
@@ -232,13 +228,13 @@ public class Keyboard {
         return size;
     }
     
-    public static View.OnTouchListener continousClick(final Runnable performAction) {
+    public static View.OnTouchListener continuousClick(final Runnable performAction) {
         return new View.OnTouchListener() {
-            private Handler handler = new Handler();
+            private final Handler handler = new Handler();
             private static final int INITIAL_DELAY = 500; // milliseconds
             private static final int REPEAT_DELAY = 50; // milliseconds
 
-            private Runnable actionRunnable = new Runnable() {
+            private final Runnable actionRunnable = new Runnable() {
                 @Override
                 public void run() {
                     performAction.run();

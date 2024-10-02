@@ -11,8 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Collections;
-import java.util.Arrays;
 
 public class Editor extends View {
     List<Line> Lines = new ArrayList<>();
@@ -46,7 +44,7 @@ public class Editor extends View {
         textBounds = new Rect();
         charCursor = new RectF();
         
-        mPaint.setTextSize(50f);
+        mPaint.setTextSize(40f);
         mPaint.setColor(Color.WHITE);
     }
 
@@ -83,38 +81,37 @@ public class Editor extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int touchX = (int) event.getX();
-            int touchY = (int) event.getY();
-            
-            int lineIndex = -1;
-            int charIndex = -1;
-            
-            // find touched line
-            for(Line line : Lines){
-                lineIndex++;
-                if(! line.isTouched(touchY)) continue;
-                currLinePosition = lineIndex;
-                
-                // find touched char
-                boolean hasTouchAnyChar = false;
-                for(RectF charRect : line.charRects){
-                    charIndex++;
-                    if(! charRect.contains(touchX, touchY)) continue;
-                    currCharPosition = charIndex;
-                    hasTouchAnyChar = true;
-                    break;
-                }
-                
-                // if didn't touched any, just select the last char
-                if(! hasTouchAnyChar) currCharPosition = charIndex;
-                
+        if (event.getAction() != MotionEvent.ACTION_DOWN) return super.onTouchEvent(event);
+
+        int touchX = (int) event.getX();
+        int touchY = (int) event.getY();
+
+        int lineIndex = -1;
+        int charIndex = -1;
+
+        // find touched line
+        for(Line line : Lines){
+            lineIndex++;
+            if(! line.isTouched(touchY)) continue;
+            currLinePosition = lineIndex;
+
+            // find touched char
+            boolean hasTouchAnyChar = false;
+            for(RectF charRect : line.charRects){
+                charIndex++;
+                if(! charRect.contains(touchX, touchY)) continue;
+                currCharPosition = charIndex;
+                hasTouchAnyChar = true;
                 break;
             }
-            invalidate();
-            return true;
+
+            // if didn't touched any, just select the last char
+            if(! hasTouchAnyChar) currCharPosition = charIndex;
+
+            break;
         }
-        return super.onTouchEvent(event);
+        invalidate();
+        return true;
     }
     
     
@@ -140,17 +137,16 @@ public class Editor extends View {
         int nextSpaceIndex = lastCharIndex;
         
         for (int i = currCharPosition; i < charArray.length; i++) {
-            char Char = charArray[i];
-            if(Char == ' '){
-                nextSpaceIndex = i;
-                break;
-            } 
+            if(' ' != charArray[i]) continue;
+
+            nextSpaceIndex = i;
+            break;
         }
         // start of the next word is after the space
         int startOfWordIndex = nextSpaceIndex + 1;
         
         // if over the char count, just return the last index
-        currCharPosition = startOfWordIndex > lastCharIndex ? lastCharIndex : startOfWordIndex;
+        currCharPosition = (startOfWordIndex > lastCharIndex) ? lastCharIndex : startOfWordIndex;
         invalidate();
     }
     

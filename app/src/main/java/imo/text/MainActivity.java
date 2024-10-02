@@ -12,13 +12,13 @@ public class MainActivity extends Activity{
         setContentView(R.layout.activity_main);
 
         final Editor editor = findViewById(R.id.editor);
-        StringBuilder sb = new StringBuilder();
-        sb.append("america ya! :3");
-        for(int i = 0; i < 99; i++){
-            sb.append("\nhallo:D");
-        }
-        editor.setText(sb.toString());
 
+        String a = "";
+        a += "never gonna give u up\n";
+        a += "never gonna let u down\n";
+        a += "never gonna run around and desert u\n";
+
+        editor.setText(a);
 
         View keyboard = findViewById(R.id.keyboard);
         keyboard.post(new Runnable(){

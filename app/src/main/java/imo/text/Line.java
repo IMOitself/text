@@ -17,7 +17,4 @@ public class Line {
     boolean isTouched(int touchY){
         return touchY <= bottom && touchY >= top;
     }
-
-
-    
 }
