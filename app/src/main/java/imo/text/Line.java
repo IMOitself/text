@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Line {
     List<RectF> charRects = new ArrayList<>();
-    // TODO: better name for wordCharPositions
-    List<List<Integer>> wordCharPositions = new ArrayList<>();
+    List<List<Integer>> wordList = new ArrayList<>(); // each word contains positions of its chars
+    
     String text;
     Integer bottom;
     Integer top;

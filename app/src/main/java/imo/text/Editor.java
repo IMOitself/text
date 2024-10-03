@@ -73,8 +73,8 @@ public class Editor extends View {
         
         // find the current word by current char position
         int wordIndex = 0;
-        for(List<Integer> wordCharPositions : currLine.wordCharPositions){
-            for(int charPosition : wordCharPositions){
+        for(List<Integer> word : currLine.wordList){
+            for(int charPosition : word){
                 if(charPosition == currCharPosition){
                     currWordIndex = wordIndex;
                     break;
@@ -145,9 +145,9 @@ public class Editor extends View {
     void moveCursorToNextWordStart(){
         Line currLine = Lines.get(currLinePosition);
         int nextWordIndex = currWordIndex + 1;
-        if(nextWordIndex > currLine.wordCharPositions.size() - 1) return; // over last word
+        if(nextWordIndex > currLine.wordList.size() - 1) return; // over last word
 
-        List<Integer> nextWord = currLine.wordCharPositions.get(nextWordIndex);
+        List<Integer> nextWord = currLine.wordList.get(nextWordIndex);
         currCharPosition = nextWord.get(0);
         invalidate();
     }
@@ -156,7 +156,7 @@ public class Editor extends View {
         Line currLine = Lines.get(currLinePosition);
 
         // if the cursor is still in the current word but not at the first char
-        List<Integer> currWord = currLine.wordCharPositions.get(currWordIndex);
+        List<Integer> currWord = currLine.wordList.get(currWordIndex);
 
         if(currCharPosition > currWord.get(0)){
             currCharPosition = currWord.get(0);
@@ -168,7 +168,7 @@ public class Editor extends View {
         int prevWordIndex = currWordIndex - 1;
         if(prevWordIndex < 0) return;
 
-        List<Integer> prevWord = currLine.wordCharPositions.get(prevWordIndex);
+        List<Integer> prevWord = currLine.wordList.get(prevWordIndex);
         currCharPosition = prevWord.get(0);
         invalidate();
     }
@@ -177,7 +177,7 @@ public class Editor extends View {
         Line currLine = Lines.get(currLinePosition);
 
         // if the cursor is still in the current word but not at the last char
-        List<Integer> currWord = currLine.wordCharPositions.get(currWordIndex);
+        List<Integer> currWord = currLine.wordList.get(currWordIndex);
         int currLastChar = currWord.size() - 1;
 
         if(currCharPosition < currWord.get(currLastChar)){
@@ -187,9 +187,9 @@ public class Editor extends View {
         }
 
         int nextWordIndex = currWordIndex + 1;
-        if(nextWordIndex > currLine.wordCharPositions.size() - 1) return; // over last word
+        if(nextWordIndex > currLine.wordList.size() - 1) return; // over last word
 
-        List<Integer> nextWord = currLine.wordCharPositions.get(nextWordIndex);
+        List<Integer> nextWord = currLine.wordList.get(nextWordIndex);
         int nextLastChar = nextWord.size() - 1;
         currCharPosition = nextWord.get(nextLastChar);
         invalidate();
@@ -236,7 +236,7 @@ public class Editor extends View {
 
             // get each char bounds as RectF
             char[] chars = line.text.toCharArray();
-            List<Integer> charPositions = new ArrayList<>();
+            List<Integer> charPositionsOfWord = new ArrayList<>();
 
             for (int i = 0; i < line.text.length(); i++) {
                 float charWidth = mPaint.measureText(line.text, i, i + 1);
@@ -249,16 +249,16 @@ public class Editor extends View {
                 charRect.right = cumulativeWidth;
                 line.charRects.add(charRect);
 
-                charPositions.add(i);
+                charPositionsOfWord.add(i);
 
                 if(Character.isWhitespace(chars[i]) || i == line.text.length() - 1){
 
                     // remove the whitespace char in the end of the word
-                    if(Character.isWhitespace(chars[charPositions.get(charPositions.size() - 1)]))
-                        charPositions.remove(charPositions.size() - 1);
+                    if(Character.isWhitespace(chars[charPositionsOfWord.get(charPositionsOfWord.size() - 1)]))
+                        charPositionsOfWord.remove(charPositionsOfWord.size() - 1);
 
-                    line.wordCharPositions.add(new ArrayList<>(charPositions));
-                    charPositions.clear();
+                    line.wordList.add(new ArrayList<>(charPositionsOfWord));
+                    charPositionsOfWord.clear();
                 }
             }
         }
