@@ -174,7 +174,14 @@ public class Editor extends View {
 
         // only go to previous word if the cursor is at first char of current word
         int prevWordIndex = currWordIndex - 1;
-        if(prevWordIndex < 0) return;
+        if(prevWordIndex < 0) { // can't go backward any further
+            int prevLinePosition = currLinePosition - 1;
+            if(prevLinePosition < 0) return;
+
+            currLine = Lines.get(prevLinePosition);
+            prevWordIndex = currLine.wordList.size() - 1;
+            currLinePosition = prevLinePosition;
+        }
 
         List<Integer> prevWord = currLine.wordList.get(prevWordIndex);
         currCharPosition = prevWord.get(0);
