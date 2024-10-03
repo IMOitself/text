@@ -71,6 +71,18 @@ public class Editor extends View {
         
         charCursor = currCharRect;
         
+        // find the current word by current char position
+        int wordIndex = 0;
+        for(List<Integer> wordCharPositions : currLine.wordCharPositions){
+            for(int charPosition : wordCharPositions){
+                if(charPosition == currCharPosition){
+                    currWordIndex = wordIndex;
+                    break;
+                }
+            }
+            wordIndex++;
+        }
+        
         mPaint.setColor(Color.DKGRAY);
         canvas.drawRect(0, currLine.top, getWidth(), currLine.bottom, mPaint);
         
@@ -137,7 +149,6 @@ public class Editor extends View {
 
         List<Integer> nextWord = currLine.wordCharPositions.get(nextWordIndex);
         currCharPosition = nextWord.get(0);
-        currWordIndex += 1;
         invalidate();
     }
 
@@ -159,7 +170,6 @@ public class Editor extends View {
 
         List<Integer> prevWord = currLine.wordCharPositions.get(prevWordIndex);
         currCharPosition = prevWord.get(0);
-        currWordIndex -= 1;
         invalidate();
     }
 
@@ -182,7 +192,6 @@ public class Editor extends View {
         List<Integer> nextWord = currLine.wordCharPositions.get(nextWordIndex);
         int nextLastChar = nextWord.size() - 1;
         currCharPosition = nextWord.get(nextLastChar);
-        currWordIndex += 1;
         invalidate();
     }
 

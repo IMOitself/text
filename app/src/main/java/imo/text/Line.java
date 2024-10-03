@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Line {
     List<RectF> charRects = new ArrayList<>();
+    // TODO: better name for wordCharPositions
     List<List<Integer>> wordCharPositions = new ArrayList<>();
     String text;
     Integer bottom;
