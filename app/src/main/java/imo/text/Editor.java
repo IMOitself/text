@@ -144,8 +144,16 @@ public class Editor extends View {
     
     void moveCursorToNextWordStart(){
         Line currLine = Lines.get(currLinePosition);
+        
         int nextWordIndex = currWordIndex + 1;
-        if(nextWordIndex > currLine.wordList.size() - 1) return; // over last word
+        if(nextWordIndex >= currLine.wordList.size()) { // over last word of the line
+            int nextLinePosition = currLinePosition + 1;
+            if(nextLinePosition >= Lines.size()) return;
+            
+            currLine = Lines.get(nextLinePosition);
+            nextWordIndex = 0;
+            currLinePosition = nextLinePosition;
+        }
 
         List<Integer> nextWord = currLine.wordList.get(nextWordIndex);
         currCharPosition = nextWord.get(0);
@@ -188,7 +196,7 @@ public class Editor extends View {
 
         int nextWordIndex = currWordIndex + 1;
         if(nextWordIndex > currLine.wordList.size() - 1) return; // over last word
-
+        
         List<Integer> nextWord = currLine.wordList.get(nextWordIndex);
         int nextLastChar = nextWord.size() - 1;
         currCharPosition = nextWord.get(nextLastChar);
