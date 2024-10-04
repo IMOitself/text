@@ -130,8 +130,20 @@ public class Editor extends View {
     void moveCursorX(int amount){
         int newCharPosition = amount + currCharPosition;
         
-        if(newCharPosition < 0) return;
-        if(newCharPosition >= Lines.get(currLinePosition).charRects.size()) return;
+        if(newCharPosition < 0) {
+            int prevLinePosition = currLinePosition - 1;
+            if(prevLinePosition < 0) return;
+
+            currLinePosition = prevLinePosition;
+            newCharPosition = Lines.get(currLinePosition).charRects.size() - 1;
+        }
+        if(newCharPosition >= Lines.get(currLinePosition).charRects.size()) {
+            int nextLinePosition = currLinePosition + 1;
+            if(nextLinePosition >= Lines.size()) return;
+
+            currLinePosition = nextLinePosition;
+            newCharPosition = 0;
+        }
         
         currCharPosition = newCharPosition;
         invalidate();
