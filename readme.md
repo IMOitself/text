@@ -1,18 +1,18 @@
 # text 🗒️
-a code editor project for **Android Studio** and **AIDE** :3
+a code editor project made in **Android Studio** and **AIDE** :3
 
 <details>
 <summary>note:</summary>
 
-it works as AIDE project, so if it doesnt, just wake me:D
+it works as AIDE project. wake me if it doesn't:D
 [open](https://github.com/IMOitself/text/issues/new/choose)
 
 </details>
 
-## Usage
+## Contribute
 
 <details>
-<summary>use in Android Studio</summary>
+<summary>Android Studio</summary>
 
 1. open Android Studio.
 
@@ -26,7 +26,7 @@ it works as AIDE project, so if it doesnt, just wake me:D
 
 </details>
 <details>
-<summary>use in AIDE</summary>
+<summary>AIDE</summary>
 
 ###### Note: when compiled as an app it will be as an old android version. idk why it does that
 
