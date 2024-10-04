@@ -136,6 +136,7 @@ public class Editor extends View {
         int newLinePosition = amount + currLinePosition;
 
         if(newLinePosition < 0) return;
+        if(newLinePosition >= Lines.size()) return;
 
         currLinePosition = newLinePosition;
 
