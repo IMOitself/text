@@ -1,5 +1,12 @@
 # text 🗒️
-a code editor project made in **Android Studio** and **AIDE** :3
+
+![front_page](assets/front_page.jpg)
+
+<div align="center">
+a code editor project made in Android Studio and AIDE
+</div>
+
+_- with builtin keyboard and vim motion_
 
 <details>
 <summary>note:</summary>
