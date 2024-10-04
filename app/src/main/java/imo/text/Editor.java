@@ -73,23 +73,47 @@ public class Editor extends View {
         
         // find the current word by current char position
         int wordIndex = 0;
+        boolean hasFoundCurrWord = false;
         for(List<Integer> word : currLine.wordList){
             for(int charPosition : word){
                 if(charPosition == currCharPosition){
                     currWordIndex = wordIndex;
+                    hasFoundCurrWord = true;
                     break;
                 }
             }
             wordIndex++;
         }
         
+        // highlights line
         mPaint.setColor(Color.DKGRAY);
+        mPaint.setStyle(Paint.Style.FILL);
         canvas.drawRect(0, currLine.top, getWidth(), currLine.bottom, mPaint);
         
+        // highlights char
         mPaint.setColor(0xFF888888);
         canvas.drawRect(charCursor, mPaint);
         
-        drawTexts(canvas, Lines, lineSpacing);
+        // highlights word
+        mPaint.setColor(0xFF888888);
+        mPaint.setStrokeWidth(2);
+        mPaint.setStyle(Paint.Style.STROKE);
+        
+        if(hasFoundCurrWord){
+            RectF currWordRect = new RectF();
+            List<Integer> charPositionsOfWord = currLine.wordList.get(currWordIndex);
+            int lastCharPositionOfWord = charPositionsOfWord.size() - 1;
+            currWordRect.left = currLine.charRects.get(charPositionsOfWord.get(0)).left;
+            currWordRect.right = currLine.charRects.get(charPositionsOfWord.get(lastCharPositionOfWord)).right;
+            currWordRect.top = currLine.top;
+            currWordRect.bottom = currLine.bottom;
+            canvas.drawRect(currWordRect, mPaint);
+        }
+        
+        // draw text
+        mPaint.setColor(Color.WHITE);
+        mPaint.setStyle(Paint.Style.FILL);
+        drawTexts(canvas, Lines, lineSpacing, mPaint);
     }
 
     @Override
@@ -300,9 +324,9 @@ public class Editor extends View {
         }
     }
 
-    void drawTexts(Canvas canvas, List<Line> Lines, int lineSpacing){
+    void drawTexts(Canvas canvas, List<Line> Lines, int lineSpacing, Paint mPaint){
         for(Line line : Lines){
-            mPaint.setColor(Color.WHITE);
+            
             canvas.drawText(line.text, 0, line.bottom - lineSpacing, mPaint);
 
             // Stop drawing if we're off the bottom of the view
