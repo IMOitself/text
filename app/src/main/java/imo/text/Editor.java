@@ -127,6 +127,25 @@ public class Editor extends View {
         return true;
     }
     
+    void moveCursorToFirstChar(){
+        currCharPosition = 0;
+        invalidate();
+    }
+    
+    void moveCursorY(int amount){
+        int newLinePosition = amount + currLinePosition;
+
+        if(newLinePosition < 0) return;
+
+        currLinePosition = newLinePosition;
+
+        // prevent overshoot if the previous line is longer than the new
+        Line line = Lines.get(newLinePosition);
+        if(currCharPosition >= line.charRects.size())
+            currCharPosition = line.charRects.size() - 1;
+        invalidate();
+    }
+    
     void moveCursorX(int amount){
         int newCharPosition = amount + currCharPosition;
         
@@ -149,12 +168,7 @@ public class Editor extends View {
         invalidate();
     }
     
-    void moveCursorToFirstChar(){
-        currCharPosition = 0;
-        invalidate();
-    }
-    
-    void moveCursorToNextWordStart(){
+    void moveCursorToNextWord(){
         Line currLine = Lines.get(currLinePosition);
         
         int nextWordIndex = currWordIndex + 1;
@@ -172,7 +186,7 @@ public class Editor extends View {
         invalidate();
     }
 
-    void moveCursorToPrevWordStart(){
+    void moveCursorToPrevWord(){
         Line currLine = Lines.get(currLinePosition);
 
         // if the cursor is still in the current word but not at the first char
@@ -227,20 +241,6 @@ public class Editor extends View {
         List<Integer> nextWord = currLine.wordList.get(nextWordIndex);
         int nextLastChar = nextWord.size() - 1;
         currCharPosition = nextWord.get(nextLastChar);
-        invalidate();
-    }
-
-    void moveCursorY(int amount){
-        int newLinePosition = amount + currLinePosition;
-        
-        if(newLinePosition < 0) return;
-        
-        currLinePosition = newLinePosition;
-        
-        // prevent overshoot if the previous line is longer than the new
-        Line line = Lines.get(newLinePosition);
-        if(currCharPosition >= line.charRects.size())
-            currCharPosition = line.charRects.size() - 1;
         invalidate();
     }
     

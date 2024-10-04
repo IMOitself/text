@@ -159,13 +159,13 @@ public class Keyboard {
         keyW.setOnTouchListener(continuousClick(new Runnable() {
             @Override
             public void run() {
-                mEditor.moveCursorToNextWordStart();
+                mEditor.moveCursorToNextWord();
             }
         }));
         keyB.setOnTouchListener(continuousClick(new Runnable() {
             @Override
             public void run() {
-                mEditor.moveCursorToPrevWordStart();
+                mEditor.moveCursorToPrevWord();
             }
         }));
         keyE.setOnTouchListener(continuousClick(new Runnable() {
