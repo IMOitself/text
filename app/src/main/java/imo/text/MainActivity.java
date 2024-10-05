@@ -24,7 +24,7 @@ public class MainActivity extends Activity{
         keyboard.post(new Runnable(){
                 @Override
                 public void run(){
-                    Keyboard.mEditor = editor;
+                    VimMotion.mEditor = editor;
                     Keyboard.configKeyboard(MainActivity.this);
                 }
             });

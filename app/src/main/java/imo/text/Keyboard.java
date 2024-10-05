@@ -15,7 +15,6 @@ import android.view.MotionEvent;
 
 public class Keyboard {
     static Activity mActivity;
-    static Editor mEditor;
     static int keyPaddingW, keyPaddingH;
     static int keyCornerRadius;
     static float keyTextSize = -1;
@@ -129,67 +128,67 @@ public class Keyboard {
         keyH.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
-                        mEditor.moveCursorX(-1);
+                        VimMotion.moveCursorX(-1);
                     }
                 }));
         keyL.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
-                        mEditor.moveCursorX(1);
+                        VimMotion.moveCursorX(1);
                     }
                 }));
         key0.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
-                        mEditor.moveCursorToFirstChar();
+                        VimMotion.moveCursorToFirstChar();
                     }
                 }));
         keyJ.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
-                        mEditor.moveCursorY(1);
+                        VimMotion.moveCursorY(1);
                     }
                 }));
         keyK.setOnTouchListener(continuousClick(new Runnable() {
                     @Override
                     public void run() {
-                        mEditor.moveCursorY(-1);
+                        VimMotion.moveCursorY(-1);
                     }
                 }));
         keyW.setOnTouchListener(continuousClick(new Runnable() {
             @Override
             public void run() {
-                mEditor.moveCursorToNextWord();
+                VimMotion.moveCursorToNextWord();
             }
         }));
         keyB.setOnTouchListener(continuousClick(new Runnable() {
             @Override
             public void run() {
-                mEditor.moveCursorToPrevWord();
+                VimMotion.moveCursorToPrevWord();
             }
         }));
         keyE.setOnTouchListener(continuousClick(new Runnable() {
             @Override
             public void run() {
-                mEditor.moveCursorToNextWordEnd();
+                VimMotion.moveCursorToNextWordEnd();
             }
         }));
         key_space.setOnTouchListener(continuousClick(new Runnable(){
                     @Override
                     public void run(){
-                        mEditor.moveCursorX(1);
+                        VimMotion.moveCursorX(1);
                     }
                 }));
         key_backspace.setOnTouchListener(continuousClick(new Runnable(){
                     @Override
                     public void run(){
-                        mEditor.moveCursorX(-1);
+                        VimMotion.moveCursorX(-1);
                     }
                 }));
         key_enter.setOnTouchListener(continuousClick(new Runnable(){
                     @Override
                     public void run(){
-                        mEditor.moveCursorY(1);
+                        VimMotion.moveCursorY(1);
                     }
                 }));
     }
