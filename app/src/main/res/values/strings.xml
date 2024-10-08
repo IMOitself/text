@@ -13,17 +13,17 @@
     <string name="_8"> </string>
     <string name="_9"> </string>
     <string name="a"> </string>
-    <string name="b">B</string>
+    <string name="b">b</string>
     <string name="c"> </string>
     <string name="d"> </string>
-    <string name="e">E</string>
+    <string name="e">e</string>
     <string name="f"> </string>
     <string name="g"> </string>
-    <string name="h">H</string>
+    <string name="h">h</string>
     <string name="i"> </string>
-    <string name="j">J</string>
-    <string name="k">K</string>
-    <string name="l">L</string>
+    <string name="j">j</string>
+    <string name="k">k</string>
+    <string name="l">l</string>
     <string name="m"> </string>
     <string name="n"> </string>
     <string name="o"> </string>
@@ -34,7 +34,7 @@
     <string name="t"> </string>
     <string name="u"> </string>
     <string name="v"> </string>
-    <string name="w">W</string>
+    <string name="w">w</string>
     <string name="x"> </string>
     <string name="y"> </string>
     <string name="z"> </string>
@@ -42,6 +42,6 @@
     <string name="backspace">back</string>
     <string name="period"> </string>
     <string name="ctrl"> </string>
-    <string name="shift"> </string>
+    <string name="shift">shift</string>
     <string name="enter">enter</string>
 </resources>

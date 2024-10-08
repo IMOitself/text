@@ -6,18 +6,23 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.os.Handler;
-import android.view.MotionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Keyboard {
     static Activity mActivity;
     static int keyPaddingW, keyPaddingH;
     static int keyCornerRadius;
     static float keyTextSize = -1;
+    
+    static final int NO_SHIFT = 0, SINGLE_SHIFT = 1, LONG_SHIFT = 2;
+    static int shiftMode = NO_SHIFT;
 
     public static void configKeyboard(Activity activity){
         mActivity = activity;
@@ -62,21 +67,21 @@ public class Keyboard {
         TextView keyN = mActivity.findViewById(R.id.key_N);
         TextView keyM = mActivity.findViewById(R.id.key_M);
 
-        TextView key_comma = mActivity.findViewById(R.id.key_comma);
-        TextView key_period = mActivity.findViewById(R.id.key_period);
-        TextView key_shift = mActivity.findViewById(R.id.key_shift);
-        TextView key_backspace = mActivity.findViewById(R.id.key_backspace);
-        TextView key_ctrl = mActivity.findViewById(R.id.key_ctrl);
+        final TextView key_comma = mActivity.findViewById(R.id.key_comma);
+        final TextView key_period = mActivity.findViewById(R.id.key_period);
+        final TextView key_shift = mActivity.findViewById(R.id.key_shift);
+        final TextView key_backspace = mActivity.findViewById(R.id.key_backspace);
+        final TextView key_ctrl = mActivity.findViewById(R.id.key_ctrl);
 
-        TextView key_space = mActivity.findViewById(R.id.key_space);
-        TextView key_enter = mActivity.findViewById(R.id.key_enter);
+        final TextView key_space = mActivity.findViewById(R.id.key_space);
+        final TextView key_enter = mActivity.findViewById(R.id.key_enter);
 
-        TextView[] numberSizeKeys = {
+        final TextView[] numberSizeKeys = {
                 key1, key2, key3, key4, key5,
                 key6, key7, key8, key9, key0
         };
 
-        TextView[] normalSizeKeys = {
+        final TextView[] normalSizeKeys = {
                 keyQ, keyW, keyE, keyR, keyT, keyY,
                 keyU, keyI, keyO, keyP, keyA, keyS,
                 keyD, keyF, keyG, keyH, keyJ, keyK,
@@ -84,9 +89,20 @@ public class Keyboard {
                 keyN, keyM, key_comma, key_period
         };
 
-        TextView[] wideSizeKeys = {
+        final TextView[] wideSizeKeys = {
                 key_shift, key_backspace, key_ctrl
         };
+        
+        // any keys that can be lower or upper case
+        final List<TextView> alphabetKeys = new ArrayList<>();
+        for(TextView normalSizeKey : normalSizeKeys){
+            alphabetKeys.add(normalSizeKey);
+        }
+        alphabetKeys.add(key_shift);
+        alphabetKeys.add(key_backspace);
+        alphabetKeys.add(key_ctrl);
+        alphabetKeys.add(key_enter);
+        
 
         // Get screen dimensions
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -98,10 +114,10 @@ public class Keyboard {
         int keyboardHeight = (screenHeight * 7) / 24;
 
         // Calculate key dimensions
-        int normalKeyWidth = screenWidth / 10;
-        int normalKeyHeight = keyboardHeight / 4;
-        int numberKeyHeight = normalKeyHeight * 3 / 4;
-        int wideKeyWidth = normalKeyWidth + (normalKeyWidth / 2);
+        final int normalKeyWidth = screenWidth / 10;
+        final int normalKeyHeight = keyboardHeight / 4;
+        final int numberKeyHeight = normalKeyHeight * 3 / 4;
+        final int wideKeyWidth = normalKeyWidth + (normalKeyWidth / 2);
 
         keyPaddingW = (int) (normalKeyWidth * 0.1f); // 10% width
         keyPaddingH = (int) (normalKeyHeight * 0.1f);// 10% height
@@ -114,7 +130,7 @@ public class Keyboard {
         for (TextView textview : normalSizeKeys)
             configKey(textview, normalKeyWidth, normalKeyHeight, R.color.key_primary);
 
-        for (TextView textview  : wideSizeKeys)
+        for (TextView textview : wideSizeKeys)
             configKey(textview, wideKeyWidth, normalKeyHeight, R.color.key_secondary);
 
         configKey(key_space, normalKeyWidth * 5, normalKeyHeight, R.color.key_primary);
@@ -191,6 +207,26 @@ public class Keyboard {
                         VimMotion.moveCursorY(1);
                     }
                 }));
+        key_shift.setOnTouchListener(continuousClick(new Runnable(){
+                    @Override
+                    public void run() {
+                        shiftMode++;
+                        switch(shiftMode){
+                            case SINGLE_SHIFT:
+                                setAllKeysToUppercase(alphabetKeys);
+                                break;
+                            case LONG_SHIFT:
+                                setAllKeysToUppercase(alphabetKeys);
+                                configKey(key_shift, wideKeyWidth, normalKeyHeight, R.color.key_tertiary);
+                                break;
+                            default:
+                                if(shiftMode > LONG_SHIFT) shiftMode = NO_SHIFT;
+                                setAllKeysToLowercase(alphabetKeys);
+                                configKey(key_shift, wideKeyWidth, normalKeyHeight, R.color.key_secondary);
+                                
+                        }
+                    }
+                }));
     }
 
     private static void configKey(TextView view, int width, int height, int colorId){
@@ -237,6 +273,20 @@ public class Keyboard {
         }
 
         return size;
+    }
+    
+    public static void setAllKeysToUppercase(List<TextView> keys){
+        for(TextView key : keys){
+            String getText = key.getText().toString();
+            key.setText(getText.toUpperCase());
+        }
+    }
+    
+    public static void setAllKeysToLowercase(List<TextView> keys){
+        for(TextView key : keys){
+            String getText = key.getText().toString();
+            key.setText(getText.toLowerCase());
+        }
     }
     
     public static View.OnTouchListener continuousClick(final Runnable performAction) {
