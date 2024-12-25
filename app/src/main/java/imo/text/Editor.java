@@ -28,7 +28,7 @@ public class Editor extends View {
     int lineSpacing = 0;
 	
 	long touchDownTime = 0;
-	boolean selectWord = false;
+	boolean isLongClick = false;
 	Handler longClickHandler;
 
     public Editor(Context context) {
@@ -82,6 +82,7 @@ public class Editor extends View {
         // find the current word by current char index
         int wordIndex = 0;
         boolean hasFoundCurrWord = false;
+		
         for(List<Integer> word : currLine.wordList){
             for(int charIndex : word){
                 if(charIndex == currCharIndex){
@@ -106,28 +107,40 @@ public class Editor extends View {
         mPaint.setColor(0xFF888888);
         mPaint.setStrokeWidth(2);
         mPaint.setStyle(Paint.Style.STROKE);
-		if(selectWord){
+		if(isLongClick){
 			mPaint.setColor(Color.RED);
 			mPaint.setStyle(Paint.Style.FILL);
 		}
         
 		RectF currWordRect = null;
+		boolean isCurrWordOneLetter = false;
 		
         if(hasFoundCurrWord){
-            List<Integer> charIndexesOfWord = currLine.wordList.get(currWordIndex);
-            int lastCharIndexOfWord = charIndexesOfWord.size() - 1;
+			List<Integer> currWordCharIndexes = currLine.wordList.get(currWordIndex);
+			isCurrWordOneLetter = currWordCharIndexes.size() == 1;
+            int lastCharIndexOfWord = currWordCharIndexes.size() - 1;
 			
 			currWordRect = new RectF();
-            currWordRect.left = currLine.charRects.get(charIndexesOfWord.get(0)).left;
-            currWordRect.right = currLine.charRects.get(charIndexesOfWord.get(lastCharIndexOfWord)).right;
+            currWordRect.left = currLine.charRects.get(currWordCharIndexes.get(0)).left;
+            currWordRect.right = currLine.charRects.get(currWordCharIndexes.get(lastCharIndexOfWord)).right;
             currWordRect.top = currLine.top;
             currWordRect.bottom = currLine.bottom;
             canvas.drawRect(currWordRect, mPaint);
         }
 		
 		// draw selection handle
-		if(selectWord && hasFoundCurrWord){
-			float handleSize = currWordRect.height() / 2;
+		float handleSize = currCharRect.height() / 2;
+		
+		if ((!hasFoundCurrWord || isCurrWordOneLetter) && isLongClick){
+			RectF singleHandle = new RectF();
+			singleHandle.top = currCharRect.bottom;
+			singleHandle.bottom = singleHandle.top + handleSize;
+			singleHandle.left = currCharRect.left - (handleSize / 2);
+			singleHandle.right = currCharRect.left + (handleSize / 2);
+			canvas.drawRect(singleHandle, mPaint);
+		}
+		else 
+		if (hasFoundCurrWord && isLongClick) {
 			RectF leftHandle = new RectF();
 			RectF rightHandle = new RectF();
 
@@ -141,8 +154,6 @@ public class Editor extends View {
 			rightHandle.left = currWordRect.right - (handleSize / 2);
 			rightHandle.right = currWordRect.right + (handleSize / 2);
 
-			mPaint.setColor(Color.RED);
-			mPaint.setStyle(Paint.Style.FILL);
 			canvas.drawRect(leftHandle, mPaint);
 			canvas.drawRect(rightHandle, mPaint);
 		}
@@ -152,7 +163,7 @@ public class Editor extends View {
         mPaint.setStyle(Paint.Style.FILL);
         drawTexts(canvas, Lines, lineSpacing, mPaint);
 		
-		if(selectWord) selectWord = false;
+		if(isLongClick) isLongClick = false;
 	}
 	
     @Override
@@ -202,7 +213,7 @@ public class Editor extends View {
 	private final Runnable onLongClick = new Runnable() {
         @Override
         public void run() {
-			selectWord = true;
+			isLongClick = true;
             invalidate();
         }
     };
