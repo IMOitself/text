@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Line {
     List<RectF> charRects = new ArrayList<>();
-    List<List<Integer>> wordList = new ArrayList<>(); // each word contains positions of its chars
+    List<List<Integer>> wordList = new ArrayList<>(); // each word contains indexes of its chars
     
     String text;
     Integer bottom;

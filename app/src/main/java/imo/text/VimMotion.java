@@ -7,73 +7,73 @@ public class VimMotion {
     static Editor mEditor;
     
     static void moveCursorToFirstChar(){
-        mEditor.currCharPosition = 0;
+        mEditor.currCharIndex = 0;
         mEditor.invalidate();
     }
 
     static void moveCursorY(int amount){
-        int newLinePosition = amount + mEditor.currLinePosition;
+        int newLineIndex = amount + mEditor.currLineIndex;
 
-        if(newLinePosition < 0) return;
-        if(newLinePosition >= mEditor.Lines.size()) return;
+        if(newLineIndex < 0) return;
+        if(newLineIndex >= mEditor.Lines.size()) return;
 
-        mEditor.currLinePosition = newLinePosition;
+        mEditor.currLineIndex = newLineIndex;
 
         // prevent overshoot if the previous line is longer than the new
-        Line line = mEditor.Lines.get(newLinePosition);
-        if(mEditor.currCharPosition >= line.charRects.size())
-           mEditor.currCharPosition = line.charRects.size() - 1;
+        Line line = mEditor.Lines.get(newLineIndex);
+        if(mEditor.currCharIndex >= line.charRects.size())
+           mEditor.currCharIndex = line.charRects.size() - 1;
         mEditor.invalidate();
     }
 
     static void moveCursorX(int amount){
-        int newCharPosition = amount + mEditor.currCharPosition;
+        int newCharIndex = amount + mEditor.currCharIndex;
 
-        if(newCharPosition < 0) {
-            int prevLinePosition = mEditor.currLinePosition - 1;
-            if(prevLinePosition < 0) return;
+        if(newCharIndex < 0) {
+            int prevLineIndex = mEditor.currLineIndex - 1;
+            if(prevLineIndex < 0) return;
 
-            mEditor.currLinePosition = prevLinePosition;
-            newCharPosition = mEditor.Lines.get(mEditor.currLinePosition).charRects.size() - 1;
+            mEditor.currLineIndex = prevLineIndex;
+            newCharIndex = mEditor.Lines.get(mEditor.currLineIndex).charRects.size() - 1;
         }
-        if(newCharPosition >= mEditor.Lines.get(mEditor.currLinePosition).charRects.size()) {
-            int nextLinePosition = mEditor.currLinePosition + 1;
-            if(nextLinePosition >= mEditor.Lines.size()) return;
+        if(newCharIndex >= mEditor.Lines.get(mEditor.currLineIndex).charRects.size()) {
+            int nextLineIndex = mEditor.currLineIndex + 1;
+            if(nextLineIndex >= mEditor.Lines.size()) return;
 
-            mEditor.currLinePosition = nextLinePosition;
-            newCharPosition = 0;
+            mEditor.currLineIndex = nextLineIndex;
+            newCharIndex = 0;
         }
 
-        mEditor.currCharPosition = newCharPosition;
+        mEditor.currCharIndex = newCharIndex;
         mEditor.invalidate();
     }
 
     static void moveCursorToNextWord(){
-        Line currLine = mEditor.Lines.get(mEditor.currLinePosition);
+        Line currLine = mEditor.Lines.get(mEditor.currLineIndex);
 
         int nextWordIndex = mEditor.currWordIndex + 1;
         if(nextWordIndex >= currLine.wordList.size()) { // over last word of the line
-            int nextLinePosition = mEditor.currLinePosition + 1;
-            if(nextLinePosition >= mEditor.Lines.size()) return;
+            int nextLineIndex = mEditor.currLineIndex + 1;
+            if(nextLineIndex >= mEditor.Lines.size()) return;
 
-            currLine = mEditor.Lines.get(nextLinePosition);
+            currLine = mEditor.Lines.get(nextLineIndex);
             nextWordIndex = 0;
-            mEditor.currLinePosition = nextLinePosition;
+            mEditor.currLineIndex = nextLineIndex;
         }
 
         List<Integer> nextWord = currLine.wordList.get(nextWordIndex);
-        mEditor.currCharPosition = nextWord.get(0);
+        mEditor.currCharIndex = nextWord.get(0);
         mEditor.invalidate();
     }
 
     static void moveCursorToPrevWord(){
-        Line currLine = mEditor.Lines.get(mEditor.currLinePosition);
+        Line currLine = mEditor.Lines.get(mEditor.currLineIndex);
 
         // if the cursor is still in the current word but not at the first char
         List<Integer> currWord = currLine.wordList.get(mEditor.currWordIndex);
 
-        if(mEditor.currCharPosition > currWord.get(0)){
-            mEditor.currCharPosition = currWord.get(0);
+        if(mEditor.currCharIndex > currWord.get(0)){
+            mEditor.currCharIndex = currWord.get(0);
             mEditor.invalidate();
             return;
         }
@@ -81,46 +81,46 @@ public class VimMotion {
         // only go to previous word if the cursor is at first char of current word
         int prevWordIndex = mEditor.currWordIndex - 1;
         if(prevWordIndex < 0) { // can't go backward any further
-            int prevLinePosition = mEditor.currLinePosition - 1;
-            if(prevLinePosition < 0) return;
+            int prevLineIndex = mEditor.currLineIndex - 1;
+            if(prevLineIndex < 0) return;
 
-            currLine = mEditor.Lines.get(prevLinePosition);
+            currLine = mEditor.Lines.get(prevLineIndex);
             prevWordIndex = currLine.wordList.size() - 1;
-            mEditor.currLinePosition = prevLinePosition;
+            mEditor.currLineIndex = prevLineIndex;
         }
 
         List<Integer> prevWord = currLine.wordList.get(prevWordIndex);
-        mEditor.currCharPosition = prevWord.get(0);
+        mEditor.currCharIndex = prevWord.get(0);
         mEditor.invalidate();
     }
 
     static void moveCursorToNextWordEnd(){
-        Line currLine = mEditor.Lines.get(mEditor.currLinePosition);
+        Line currLine = mEditor.Lines.get(mEditor.currLineIndex);
 
         // if the cursor is still in the current word but not at the last char
         List<Integer> currWord = currLine.wordList.get(mEditor.currWordIndex);
         int currLastChar = currWord.size() - 1;
 
-        if(mEditor.currCharPosition < currWord.get(currLastChar)){
-            mEditor.currCharPosition = currWord.get(currLastChar);
+        if(mEditor.currCharIndex < currWord.get(currLastChar)){
+            mEditor.currCharIndex = currWord.get(currLastChar);
             mEditor.invalidate();
             return;
         }
 
         int nextWordIndex = mEditor.currWordIndex + 1;
         if(nextWordIndex >= currLine.wordList.size()) { // over last word of the line
-            int nextLinePosition = mEditor.currLinePosition + 1;
-            if(nextLinePosition >= mEditor.Lines.size()) return;
+            int nextLineIndex = mEditor.currLineIndex + 1;
+            if(nextLineIndex >= mEditor.Lines.size()) return;
 
-            currLine = mEditor.Lines.get(nextLinePosition);
+            currLine = mEditor.Lines.get(nextLineIndex);
             nextWordIndex = 0;
-            mEditor.currLinePosition = nextLinePosition;
+            mEditor.currLineIndex = nextLineIndex;
 
         }
 
         List<Integer> nextWord = currLine.wordList.get(nextWordIndex);
         int nextLastChar = nextWord.size() - 1;
-        mEditor.currCharPosition = nextWord.get(nextLastChar);
+        mEditor.currCharIndex = nextWord.get(nextLastChar);
         mEditor.invalidate();
     }
     
