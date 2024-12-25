@@ -146,13 +146,22 @@ public class Editor extends View {
 
 			leftHandle.top = currWordRect.bottom;
 			leftHandle.bottom = leftHandle.top + handleSize;
-			leftHandle.left = currWordRect.left - (handleSize / 2);
-			leftHandle.right = currWordRect.left + (handleSize / 2);
+			leftHandle.left = currWordRect.left - handleSize;
+			leftHandle.right = currWordRect.left;
 
 			rightHandle.top = currWordRect.bottom;
 			rightHandle.bottom = leftHandle.top + handleSize;
-			rightHandle.left = currWordRect.right - (handleSize / 2);
-			rightHandle.right = currWordRect.right + (handleSize / 2);
+			rightHandle.left = currWordRect.right;
+			rightHandle.right = currWordRect.right + handleSize;
+			
+			if (leftHandle.left <= 0) {
+				leftHandle.left = 0;
+				leftHandle.right = handleSize;
+			}
+			if (rightHandle.right >= getWidth()){
+				rightHandle.left = getWidth() - handleSize;
+				rightHandle.right = getWidth();
+			}
 
 			canvas.drawRect(leftHandle, mPaint);
 			canvas.drawRect(rightHandle, mPaint);
@@ -168,14 +177,12 @@ public class Editor extends View {
 	
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-		switch(event.getAction()){
-			case MotionEvent.ACTION_DOWN:
-				longClickHandler.postDelayed(onLongClick, 250);
-				break;
-			case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                longClickHandler.removeCallbacks(onLongClick);
-		}
+		// long click logic
+		if (MotionEvent.ACTION_DOWN == event.getAction())
+			longClickHandler.postDelayed(onLongClick, 250);
+		if (MotionEvent.ACTION_UP == event.getAction() || 
+			MotionEvent.ACTION_CANCEL == event.getAction())
+            longClickHandler.removeCallbacks(onLongClick);
 		
         if (MotionEvent.ACTION_DOWN != event.getAction()) return super.onTouchEvent(event);
 
