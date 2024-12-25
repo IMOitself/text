@@ -109,24 +109,50 @@ public class Editor extends View {
 		if(selectWord){
 			mPaint.setColor(Color.RED);
 			mPaint.setStyle(Paint.Style.FILL);
-			selectWord = false;
 		}
         
+		RectF currWordRect = null;
+		
         if(hasFoundCurrWord){
-            RectF currWordRect = new RectF();
             List<Integer> charIndexesOfWord = currLine.wordList.get(currWordIndex);
             int lastCharIndexOfWord = charIndexesOfWord.size() - 1;
+			
+			currWordRect = new RectF();
             currWordRect.left = currLine.charRects.get(charIndexesOfWord.get(0)).left;
             currWordRect.right = currLine.charRects.get(charIndexesOfWord.get(lastCharIndexOfWord)).right;
             currWordRect.top = currLine.top;
             currWordRect.bottom = currLine.bottom;
             canvas.drawRect(currWordRect, mPaint);
         }
-        
+		
+		// draw selection handle
+		if(selectWord && hasFoundCurrWord){
+			float handleSize = currWordRect.height() / 2;
+			RectF leftHandle = new RectF();
+			RectF rightHandle = new RectF();
+
+			leftHandle.top = currWordRect.bottom;
+			leftHandle.bottom = leftHandle.top + handleSize;
+			leftHandle.left = currWordRect.left - (handleSize / 2);
+			leftHandle.right = currWordRect.left + (handleSize / 2);
+
+			rightHandle.top = currWordRect.bottom;
+			rightHandle.bottom = leftHandle.top + handleSize;
+			rightHandle.left = currWordRect.right - (handleSize / 2);
+			rightHandle.right = currWordRect.right + (handleSize / 2);
+
+			mPaint.setColor(Color.RED);
+			mPaint.setStyle(Paint.Style.FILL);
+			canvas.drawRect(leftHandle, mPaint);
+			canvas.drawRect(rightHandle, mPaint);
+		}
+		
         // draw text
         mPaint.setColor(Color.WHITE);
         mPaint.setStyle(Paint.Style.FILL);
         drawTexts(canvas, Lines, lineSpacing, mPaint);
+		
+		if(selectWord) selectWord = false;
 	}
 	
     @Override
