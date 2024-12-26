@@ -16,7 +16,7 @@ public class Line {
         this.text = text;
     }
     
-    boolean isTouched(int touchY){
+    boolean isTouched(float touchY){
         return touchY <= bottom && touchY >= top;
     }
 }

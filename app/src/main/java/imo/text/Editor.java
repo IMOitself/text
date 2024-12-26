@@ -30,7 +30,7 @@ public class Editor extends View {
 	long touchDownTime = 0;
 	boolean isLongClick = false;
 	Handler longClickHandler;
-
+	
     public Editor(Context context) {
         super(context);
         init();
@@ -177,41 +177,39 @@ public class Editor extends View {
 	
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+		float touchX = event.getX();
+        float touchY = event.getY();
+		
 		// long click logic
 		if (MotionEvent.ACTION_DOWN == event.getAction())
 			longClickHandler.postDelayed(onLongClick, 250);
 		if (MotionEvent.ACTION_UP == event.getAction() || 
 			MotionEvent.ACTION_CANCEL == event.getAction())
             longClickHandler.removeCallbacks(onLongClick);
-		
+			
         if (MotionEvent.ACTION_DOWN != event.getAction()) return super.onTouchEvent(event);
-
-        int touchX = (int) event.getX();
-        int touchY = (int) event.getY();
 
         int lineIndex = -1;
         int charIndex = -1;
 
         // find touched line
+		findLine:
         for(Line line : Lines){
             lineIndex++;
             if(! line.isTouched(touchY)) continue;
             currLineIndex = lineIndex;
 
             // find touched char
-            boolean hasTouchAnyChar = false;
             for(RectF charRect : line.charRects){
                 charIndex++;
                 if(! charRect.contains(touchX, touchY)) continue;
                 currCharIndex = charIndex;
-                hasTouchAnyChar = true;
-                break;
+                break findLine;
             }
 
             // if didn't touched any, just select the last char
-            if(! hasTouchAnyChar) currCharIndex = charIndex;
-
-            break;
+            currCharIndex = charIndex;
+            break findLine;
         }
         invalidate();
         return true;
@@ -285,4 +283,6 @@ public class Editor extends View {
             if (line.bottom > getHeight()) break;
         }
     }
+	
+	
 }
