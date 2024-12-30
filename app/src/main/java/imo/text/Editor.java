@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Handler;
@@ -19,18 +20,18 @@ public class Editor extends View {
     int currLineIndex = 0;
     int currCharIndex = 0;
     int currWordIndex = 0;
-    
+
     Paint mPaint;
     Rect textBounds;
     RectF charCursor;
-    
+
     int lineHeight = -1;
     int lineSpacing = 0;
-	
+
 	long touchDownTime = 0;
 	boolean isLongClick = false;
 	Handler longClickHandler;
-	
+
     public Editor(Context context) {
         super(context);
         init();
@@ -46,19 +47,19 @@ public class Editor extends View {
         init();
     }
 
-    void init(){
+    void init() {
         mPaint = new Paint();
         textBounds = new Rect();
         charCursor = new RectF();
-        
-        mPaint.setTextSize(40f);
+
+        mPaint.setTextSize(150f);
         mPaint.setColor(Color.WHITE);
-		
+
 		longClickHandler = new Handler(Looper.getMainLooper());
     }
 
-    public void setText(String text){
-        for(String textLine : text.split("\n")){
+    public void setText(String text) {
+        for (String textLine : text.split("\n")) {
             Lines.add(new Line(textLine));
         }
         invalidate(); // will call onDraw()
@@ -70,22 +71,22 @@ public class Editor extends View {
         if (Lines.isEmpty()) return;
 
         Line dummyLine = Lines.get(0);
-        if(dummyLine.top == null ||
-           dummyLine.bottom == null)
-           initLines(Lines);
-        
+        if (dummyLine.top == null ||
+			dummyLine.bottom == null)
+			initLines(Lines);
+
         Line currLine = Lines.get(currLineIndex);
         RectF currCharRect = currLine.charRects.get(currCharIndex);
-        
+
         charCursor = currCharRect;
-        
+
         // find the current word by current char index
         int wordIndex = 0;
         boolean hasFoundCurrWord = false;
-		
-        for(List<Integer> word : currLine.wordList){
-            for(int charIndex : word){
-                if(charIndex == currCharIndex){
+
+        for (List<Integer> word : currLine.wordList) {
+            for (int charIndex : word) {
+                if (charIndex == currCharIndex) {
                     currWordIndex = wordIndex;
                     hasFoundCurrWord = true;
                     break;
@@ -93,33 +94,33 @@ public class Editor extends View {
             }
             wordIndex++;
         }
-        
+
         // highlights line
         mPaint.setColor(Color.DKGRAY);
         mPaint.setStyle(Paint.Style.FILL);
         canvas.drawRect(0, currLine.top, getWidth(), currLine.bottom, mPaint);
-        
+
         // highlights char
         mPaint.setColor(0xFF888888);
         canvas.drawRect(charCursor, mPaint);
-        
+
         // highlights word
         mPaint.setColor(0xFF888888);
         mPaint.setStrokeWidth(2);
         mPaint.setStyle(Paint.Style.STROKE);
-		if(isLongClick){
+		if (isLongClick) {
 			mPaint.setColor(Color.RED);
 			mPaint.setStyle(Paint.Style.FILL);
 		}
-        
+
 		RectF currWordRect = null;
 		boolean isCurrWordOneLetter = false;
-		
-        if(hasFoundCurrWord){
+
+        if (hasFoundCurrWord) {
 			List<Integer> currWordCharIndexes = currLine.wordList.get(currWordIndex);
 			isCurrWordOneLetter = currWordCharIndexes.size() == 1;
             int lastCharIndexOfWord = currWordCharIndexes.size() - 1;
-			
+
 			currWordRect = new RectF();
             currWordRect.left = currLine.charRects.get(currWordCharIndexes.get(0)).left;
             currWordRect.right = currLine.charRects.get(currWordCharIndexes.get(lastCharIndexOfWord)).right;
@@ -127,18 +128,18 @@ public class Editor extends View {
             currWordRect.bottom = currLine.bottom;
             canvas.drawRect(currWordRect, mPaint);
         }
-		
+
 		// draw selection handle
 		float handleSize = currCharRect.height() / 2;
-		
-		if ((!hasFoundCurrWord || isCurrWordOneLetter) && isLongClick){
+
+		if ((!hasFoundCurrWord || isCurrWordOneLetter) && isLongClick) {
 			RectF singleHandle = new RectF();
 			singleHandle.top = currCharRect.bottom;
 			singleHandle.bottom = singleHandle.top + handleSize;
 			singleHandle.left = currCharRect.left - (handleSize / 2);
 			singleHandle.right = currCharRect.left + (handleSize / 2);
 			canvas.drawRect(singleHandle, mPaint);
-		}
+		} 
 		else 
 		if (hasFoundCurrWord && isLongClick) {
 			RectF leftHandle = new RectF();
@@ -153,12 +154,12 @@ public class Editor extends View {
 			rightHandle.bottom = leftHandle.top + handleSize;
 			rightHandle.left = currWordRect.right;
 			rightHandle.right = currWordRect.right + handleSize;
-			
+
 			if (leftHandle.left <= 0) {
 				leftHandle.left = 0;
 				leftHandle.right = handleSize;
 			}
-			if (rightHandle.right >= getWidth()){
+			if (rightHandle.right >= getWidth()) {
 				rightHandle.left = getWidth() - handleSize;
 				rightHandle.right = getWidth();
 			}
@@ -166,27 +167,27 @@ public class Editor extends View {
 			canvas.drawRect(leftHandle, mPaint);
 			canvas.drawRect(rightHandle, mPaint);
 		}
-		
+
         // draw text
         mPaint.setColor(Color.WHITE);
         mPaint.setStyle(Paint.Style.FILL);
         drawTexts(canvas, Lines, lineSpacing, mPaint);
-		
-		if(isLongClick) isLongClick = false;
+
+		if (isLongClick) isLongClick = false;
 	}
-	
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 		float touchX = event.getX();
         float touchY = event.getY();
-		
+
 		// long click logic
 		if (MotionEvent.ACTION_DOWN == event.getAction())
 			longClickHandler.postDelayed(onLongClick, 250);
 		if (MotionEvent.ACTION_UP == event.getAction() || 
 			MotionEvent.ACTION_CANCEL == event.getAction())
             longClickHandler.removeCallbacks(onLongClick);
-			
+
         if (MotionEvent.ACTION_DOWN != event.getAction()) return super.onTouchEvent(event);
 
         int lineIndex = -1;
@@ -194,15 +195,15 @@ public class Editor extends View {
 
         // find touched line
 		findLine:
-        for(Line line : Lines){
+        for (Line line : Lines) {
             lineIndex++;
-            if(! line.isTouched(touchY)) continue;
+            if (! line.isTouched(touchY)) continue;
             currLineIndex = lineIndex;
 
             // find touched char
-            for(RectF charRect : line.charRects){
+            for (RectF charRect : line.charRects) {
                 charIndex++;
-                if(! charRect.contains(touchX, touchY)) continue;
+                if (! charRect.contains(touchX, touchY)) continue;
                 currCharIndex = charIndex;
                 break findLine;
             }
@@ -214,7 +215,7 @@ public class Editor extends View {
         invalidate();
         return true;
     }
-    
+
 	private final Runnable onLongClick = new Runnable() {
         @Override
         public void run() {
@@ -222,13 +223,13 @@ public class Editor extends View {
             invalidate();
         }
     };
-    
-    
-    void initLines(List<Line> Lines){
+
+
+    void initLines(List<Line> Lines) {
         // populate each line's variables except the 'text'
         // cos its already been set on setText()
         int lastBottom = 0;
-        for(Line line : Lines){
+        for (Line line : Lines) {
             int cumulativeWidth = 0;
 
             // populate text bounds
@@ -261,10 +262,10 @@ public class Editor extends View {
 
                 charIndexesOfWord.add(i);
 
-                if(Character.isWhitespace(chars[i]) || i == line.text.length() - 1){
+                if (Character.isWhitespace(chars[i]) || i == line.text.length() - 1) {
 
                     // remove the whitespace char in the end of the word
-                    if(Character.isWhitespace(chars[charIndexesOfWord.get(charIndexesOfWord.size() - 1)]))
+                    if (Character.isWhitespace(chars[charIndexesOfWord.get(charIndexesOfWord.size() - 1)]))
                         charIndexesOfWord.remove(charIndexesOfWord.size() - 1);
 
                     line.wordList.add(new ArrayList<>(charIndexesOfWord));
@@ -274,15 +275,15 @@ public class Editor extends View {
         }
     }
 
-    void drawTexts(Canvas canvas, List<Line> Lines, int lineSpacing, Paint mPaint){
-        for(Line line : Lines){
-            
+    void drawTexts(Canvas canvas, List<Line> Lines, int lineSpacing, Paint mPaint) {
+        for (Line line : Lines) {
+
             canvas.drawText(line.text, 0, line.bottom - lineSpacing, mPaint);
 
             // Stop drawing if we're off the bottom of the view
             if (line.bottom > getHeight()) break;
         }
     }
-	
-	
+
+
 }

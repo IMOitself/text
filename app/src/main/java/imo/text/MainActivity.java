@@ -14,10 +14,7 @@ public class MainActivity extends Activity{
         final Editor editor = findViewById(R.id.editor);
 
         String a = "";
-        a += "never gonna give u up\n";
-        a += "never gonna let u down\n";
-        a += "never gonna run around and desert u\n";
-
+		a += "          a      \n";
         editor.setText(a);
 
         View keyboard = findViewById(R.id.keyboard);
