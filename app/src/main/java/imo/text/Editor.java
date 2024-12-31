@@ -140,20 +140,8 @@ public class Editor extends View {
 			singleHandle.right = currCharRect.left + (handleSize / 2);
 			canvas.drawRect(singleHandle, mPaint);
 			
-			float triangleHeight = singleHandle.height() / 2;
-			float triangleBaseY = singleHandle.top + triangleHeight;
-			float circleX = singleHandle.left + (singleHandle.width() / 2);
-			float circleY = triangleBaseY + (triangleHeight / 2);
-			
 			mPaint.setColor(Color.WHITE);
-			canvas.drawCircle(circleX, circleY, singleHandle.width() / 2, mPaint);
-			
-			Path triangle = new Path();
-			triangle.moveTo(circleX, singleHandle.top);
-			triangle.lineTo(singleHandle.left + (singleHandle.height() / 16), triangleBaseY);
-			triangle.lineTo(singleHandle.left + (singleHandle.height() * 15/16), triangleBaseY);
-			triangle.lineTo(circleX, singleHandle.top);
-			canvas.drawPath(triangle, mPaint);
+			drawSingleTeardrop(singleHandle, canvas);
 		} 
 		else 
 		if (hasFoundCurrWord && isLongClick) {
@@ -300,5 +288,19 @@ public class Editor extends View {
         }
     }
 
+	void drawSingleTeardrop(RectF bounds, Canvas canvas){
+		float triangleHeight = bounds.height() / 2;
+		float triangleBaseY = bounds.top + triangleHeight;
+		float circleX = bounds.left + (bounds.width() / 2);
+		float circleY = triangleBaseY + (triangleHeight / 2);
 
+		canvas.drawCircle(circleX, circleY, bounds.width() / 2, mPaint);
+
+		Path triangle = new Path();
+		triangle.moveTo(circleX, bounds.top);
+		triangle.lineTo(bounds.left + (bounds.height() / 16), triangleBaseY);
+		triangle.lineTo(bounds.left + (bounds.height() * 15/16), triangleBaseY);
+		triangle.lineTo(circleX, bounds.top);
+		canvas.drawPath(triangle, mPaint);
+	}
 }
