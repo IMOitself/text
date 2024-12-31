@@ -130,7 +130,7 @@ public class Editor extends View {
         }
 
 		// draw selection handle
-		float handleSize = currCharRect.height() / 2;
+		float handleSize = currCharRect.height() * 3 / 4;
 
 		if ((!hasFoundCurrWord || isCurrWordOneLetter) && isLongClick) {
 			RectF singleHandle = new RectF();
@@ -139,6 +139,21 @@ public class Editor extends View {
 			singleHandle.left = currCharRect.left - (handleSize / 2);
 			singleHandle.right = currCharRect.left + (handleSize / 2);
 			canvas.drawRect(singleHandle, mPaint);
+			
+			float triangleHeight = singleHandle.height() / 2;
+			float triangleBaseY = singleHandle.top + triangleHeight;
+			float circleX = singleHandle.left + (singleHandle.width() / 2);
+			float circleY = triangleBaseY + (triangleHeight / 2);
+			
+			mPaint.setColor(Color.WHITE);
+			canvas.drawCircle(circleX, circleY, singleHandle.width() / 2, mPaint);
+			
+			Path triangle = new Path();
+			triangle.moveTo(circleX, singleHandle.top);
+			triangle.lineTo(singleHandle.left + (singleHandle.height() / 16), triangleBaseY);
+			triangle.lineTo(singleHandle.left + (singleHandle.height() * 15/16), triangleBaseY);
+			triangle.lineTo(circleX, singleHandle.top);
+			canvas.drawPath(triangle, mPaint);
 		} 
 		else 
 		if (hasFoundCurrWord && isLongClick) {
