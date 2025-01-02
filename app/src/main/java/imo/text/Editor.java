@@ -52,7 +52,7 @@ public class Editor extends View {
         textBounds = new Rect();
         charCursor = new RectF();
 
-        mPaint.setTextSize(150f);
+        mPaint.setTextSize(80f);
         mPaint.setColor(Color.WHITE);
 
 		longClickHandler = new Handler(Looper.getMainLooper());
@@ -161,14 +161,19 @@ public class Editor extends View {
 			if (leftHandle.left <= 0) {
 				leftHandle.left = 0;
 				leftHandle.right = handleSize;
+				drawRightTeardrop(leftHandle, canvas);
+			}
+			else{
+				drawLeftTeardrop(leftHandle, canvas);
 			}
 			if (rightHandle.right >= getWidth()) {
 				rightHandle.left = getWidth() - handleSize;
 				rightHandle.right = getWidth();
+				drawLeftTeardrop(rightHandle, canvas);
 			}
-
-			canvas.drawRect(leftHandle, mPaint);
-			canvas.drawRect(rightHandle, mPaint);
+			else{
+				drawRightTeardrop(rightHandle, canvas);
+			}
 		}
 
         // draw text
@@ -301,6 +306,36 @@ public class Editor extends View {
 		triangle.lineTo(bounds.left + (bounds.height() / 16), triangleBaseY);
 		triangle.lineTo(bounds.left + (bounds.height() * 15/16), triangleBaseY);
 		triangle.lineTo(circleX, bounds.top);
+		canvas.drawPath(triangle, mPaint);
+	}
+	
+	void drawLeftTeardrop(RectF bounds, Canvas canvas){
+		drawTeardrop(true, bounds, canvas);
+	}
+	
+	void drawRightTeardrop(RectF bounds, Canvas canvas){
+		mPaint.setColor(Color.BLUE);
+		drawTeardrop(false, bounds, canvas);
+	}
+	
+	void drawTeardrop(boolean isLeft, RectF bounds, Canvas canvas){
+		float circleX = bounds.left + (bounds.width() / 2);
+		float circleY = bounds.top + (bounds.height() / 2);
+		canvas.drawCircle(circleX, circleY, bounds.width() / 2, mPaint);
+
+		Path triangle = new Path();
+		if(isLeft){
+			triangle.moveTo(bounds.right, bounds.top);
+			triangle.lineTo(bounds.right, circleY);
+			triangle.lineTo(circleX, bounds.top);
+			triangle.lineTo(bounds.right, bounds.top);
+		}
+		else{
+			triangle.moveTo(bounds.left, bounds.top);
+			triangle.lineTo(bounds.left, circleY);
+			triangle.lineTo(circleX, bounds.top);
+			triangle.lineTo(bounds.left, bounds.top);
+		}
 		canvas.drawPath(triangle, mPaint);
 	}
 }
